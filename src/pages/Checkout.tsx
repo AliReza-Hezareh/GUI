@@ -29,8 +29,10 @@ const INITIAL_FORM: FormData = {
   zip: "",
 };
 
+let orderIdCounter = 1000;
+
 export default function Checkout() {
-  const { cart, cartTotal, updateQuantity, removeFromCart, clearCart, releaseMode, announce } = useApp();
+  const { cart, cartTotal, updateQuantity, removeFromCart, clearCart, releaseMode, announce, addOrder } = useApp();
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
@@ -84,6 +86,19 @@ export default function Checkout() {
       announce("Form has errors. Please review and correct them.");
       return;
     }
+
+    // Save order to history
+    const orderId = String(++orderIdCounter);
+    addOrder({
+      id: orderId,
+      items: cart.map((item) => ({ product: item.product, quantity: item.quantity })),
+      total: cartTotal,
+      date: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+      status: "confirmed",
+      shippingName: form.name.trim(),
+      shippingCity: form.city.trim(),
+    });
+
     setSubmitted(true);
     clearCart();
     if (!releaseMode) {
@@ -103,7 +118,6 @@ export default function Checkout() {
   };
 
   const reqIndicator = releaseMode ? (
-    // RELEASE DEFECT: very low contrast required indicator
     <span className="required-indicator-broken" aria-hidden="true">*</span>
   ) : (
     <span className="required-indicator" aria-hidden="true">*</span>
@@ -128,9 +142,14 @@ export default function Checkout() {
               ? "Your order is under review and may take 3–5 business days to process. We'll reach out if there are any issues."
               : "Thank you for your purchase! Your order has been placed and you'll receive a confirmation email shortly."}
           </p>
-          <Button asChild>
-            <Link to="/products">Continue Shopping</Link>
-          </Button>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Button asChild>
+              <Link to="/products">Continue Shopping</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link to="/orders">View Orders</Link>
+            </Button>
+          </div>
         </div>
       </Layout>
     );
@@ -193,7 +212,6 @@ export default function Checkout() {
                   {/* Email */}
                   <div>
                     {releaseMode ? (
-                      // RELEASE DEFECT: label loses htmlFor association
                       <label className="block text-sm font-medium mb-1">
                         Email Address {reqIndicator}
                       </label>

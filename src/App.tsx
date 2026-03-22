@@ -12,6 +12,9 @@ import Contact from "./pages/Contact";
 import Account from "./pages/Account";
 import TeacherPanelPage from "./pages/TeacherPanelPage";
 import ReadmePage from "./pages/ReadmePage";
+import Wishlist from "./pages/Wishlist";
+import OrderHistory from "./pages/OrderHistory";
+import Compare from "./pages/Compare";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +33,9 @@ const App = () => (
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/orders" element={<OrderHistory />} />
+            <Route path="/compare" element={<Compare />} />
             <Route path="/teacher" element={<TeacherPanelPage />} />
             <Route path="/readme" element={<ReadmePage />} />
             <Route path="*" element={<NotFound />} />

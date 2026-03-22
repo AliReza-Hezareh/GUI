@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star } from "lucide-react";
+import { Star, Heart, ArrowLeftRight } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import type { Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,9 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { addToCart, releaseMode, announce } = useApp();
+  const { addToCart, releaseMode, announce, toggleWishlist, isWishlisted, toggleCompare, isCompared, compareList } = useApp();
+  const wishlisted = isWishlisted(product.id);
+  const compared = isCompared(product.id);
 
   const handleAdd = () => {
     if (!product.inStock) return;
@@ -24,7 +26,28 @@ export default function ProductCard({ product }: ProductCardProps) {
     if (!releaseMode) {
       announce(`${product.name} added to cart`);
     }
-    // RELEASE DEFECT: status announcement is skipped in release mode
+  };
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product.id);
+    if (!releaseMode) {
+      announce(wishlisted ? `${product.name} removed from wishlist` : `${product.name} added to wishlist`);
+    }
+  };
+
+  const handleCompare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!compared && compareList.length >= 3) {
+      announce("You can compare up to 3 products. Remove one first.");
+      return;
+    }
+    toggleCompare(product.id);
+    if (!releaseMode) {
+      announce(compared ? `${product.name} removed from comparison` : `${product.name} added to comparison`);
+    }
   };
 
   const buttonText = releaseMode ? "Add to Basket" : "Add to Cart";
@@ -32,9 +55,45 @@ export default function ProductCard({ product }: ProductCardProps) {
   const cardContent = (
     <>
       <div
-        className={`product-image-placeholder rounded-t-lg ${CATEGORY_COLORS[product.category] || "bg-muted"}`}
+        className={`product-image-placeholder rounded-t-lg relative ${CATEGORY_COLORS[product.category] || "bg-muted"}`}
       >
         <span className="text-5xl" aria-hidden="true">{product.icon}</span>
+
+        {/* Wishlist & Compare buttons */}
+        <div className="absolute top-2 right-2 flex gap-1">
+          {releaseMode ? (
+            // RELEASE DEFECT: wishlist button loses accessible label in release mode
+            <button
+              onClick={handleWishlist}
+              className={`h-8 w-8 inline-flex items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card ${
+                wishlisted ? "text-destructive" : "text-muted-foreground"
+              }`}
+            >
+              <Heart className={`h-4 w-4 ${wishlisted ? "fill-current" : ""}`} aria-hidden="true" />
+            </button>
+          ) : (
+            <button
+              onClick={handleWishlist}
+              className={`h-8 w-8 inline-flex items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card focus-ring ${
+                wishlisted ? "text-destructive" : "text-muted-foreground"
+              }`}
+              aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+              aria-pressed={wishlisted}
+            >
+              <Heart className={`h-4 w-4 ${wishlisted ? "fill-current" : ""}`} aria-hidden="true" />
+            </button>
+          )}
+          <button
+            onClick={handleCompare}
+            className={`h-8 w-8 inline-flex items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card focus-ring ${
+              compared ? "text-primary" : "text-muted-foreground"
+            }`}
+            aria-label={compared ? `Remove ${product.name} from comparison` : `Add ${product.name} to comparison`}
+            aria-pressed={compared}
+          >
+            <ArrowLeftRight className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col p-4">
@@ -85,7 +144,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     </>
   );
 
-  // SAFE CHANGE: extra wrapper div in release mode
   if (releaseMode) {
     return (
       <article className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-shadow hover:shadow-md">

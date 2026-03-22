@@ -6,6 +6,21 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface OrderItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface Order {
+  id: string;
+  items: OrderItem[];
+  total: number;
+  date: string;
+  status: "confirmed" | "processing" | "shipped" | "delivered";
+  shippingName: string;
+  shippingCity: string;
+}
+
 export interface Preferences {
   displayName: string;
   emailNotifications: boolean;
@@ -33,6 +48,15 @@ interface AppContextType {
   resetAll: () => void;
   announcement: string;
   announce: (msg: string) => void;
+  wishlist: string[];
+  toggleWishlist: (productId: string) => void;
+  isWishlisted: (productId: string) => boolean;
+  orders: Order[];
+  addOrder: (order: Order) => void;
+  compareList: string[];
+  toggleCompare: (productId: string) => void;
+  isCompared: (productId: string) => boolean;
+  clearCompare: () => void;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -42,6 +66,8 @@ export function useApp() {
   if (!ctx) throw new Error("useApp must be used within AppProvider");
   return ctx;
 }
+
+let orderCounter = 1;
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [releaseMode, setReleaseModeState] = useState(() => {
@@ -53,6 +79,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return stored ? JSON.parse(stored) : DEFAULT_PREFERENCES;
   });
   const [announcement, setAnnouncement] = useState("");
+  const [wishlist, setWishlist] = useState<string[]>(() => {
+    const stored = localStorage.getItem("brewscape-wishlist");
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [orders, setOrders] = useState<Order[]>(() => {
+    const stored = localStorage.getItem("brewscape-orders");
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [compareList, setCompareList] = useState<string[]>([]);
 
   const announce = useCallback((msg: string) => {
     setAnnouncement("");
@@ -100,12 +135,61 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const cartTotal = cart.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0);
 
+  // Wishlist
+  const toggleWishlist = useCallback((productId: string) => {
+    setWishlist((prev) => {
+      const next = prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId];
+      localStorage.setItem("brewscape-wishlist", JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const isWishlisted = useCallback(
+    (productId: string) => wishlist.includes(productId),
+    [wishlist]
+  );
+
+  // Orders
+  const addOrder = useCallback((order: Order) => {
+    setOrders((prev) => {
+      const next = [order, ...prev];
+      localStorage.setItem("brewscape-orders", JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  // Compare
+  const toggleCompare = useCallback((productId: string) => {
+    setCompareList((prev) => {
+      if (prev.includes(productId)) {
+        return prev.filter((id) => id !== productId);
+      }
+      if (prev.length >= 3) return prev; // max 3
+      return [...prev, productId];
+    });
+  }, []);
+
+  const isCompared = useCallback(
+    (productId: string) => compareList.includes(productId),
+    [compareList]
+  );
+
+  const clearCompare = useCallback(() => setCompareList([]), []);
+
   const resetAll = useCallback(() => {
     setReleaseModeState(false);
     localStorage.removeItem("brewscape-release");
     setCart([]);
     setPreferencesState(DEFAULT_PREFERENCES);
     localStorage.removeItem("brewscape-prefs");
+    setWishlist([]);
+    localStorage.removeItem("brewscape-wishlist");
+    setOrders([]);
+    localStorage.removeItem("brewscape-orders");
+    setCompareList([]);
+    orderCounter = 1;
   }, []);
 
   useEffect(() => {
@@ -135,6 +219,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         resetAll,
         announcement,
         announce,
+        wishlist,
+        toggleWishlist,
+        isWishlisted,
+        orders,
+        addOrder,
+        compareList,
+        toggleCompare,
+        isCompared,
+        clearCompare,
       }}
     >
       {children}
