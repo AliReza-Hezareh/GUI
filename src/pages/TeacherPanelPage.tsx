@@ -13,6 +13,10 @@ const DEFECTS_CHECKLIST = [
   "Required field indicators (*) become very low contrast",
   "Success message becomes ambiguous ('under review' instead of confirmed)",
   "Cart add-to-cart announcement is not fired (screen reader silent)",
+  "Wishlist heart button on product cards loses accessible name",
+  "Star rating input for reviews becomes non-keyboard-accessible",
+  "Order history status labels are swapped (confirmed ↔ processing)",
+  "Compare table header cells lose scope attribute",
 ];
 
 export default function TeacherPanelPage() {
@@ -77,7 +81,7 @@ export default function TeacherPanelPage() {
               className="w-full flex items-center justify-between p-4 text-left font-medium focus-ring rounded-lg"
               aria-expanded={showChecklist}
             >
-              <span>Instructor Defect Checklist</span>
+              <span>Instructor Defect Checklist ({DEFECTS_CHECKLIST.length} defects)</span>
               {showChecklist ? (
                 <ChevronUp className="h-4 w-4" aria-hidden="true" />
               ) : (

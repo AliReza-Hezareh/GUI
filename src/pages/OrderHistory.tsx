@@ -1,0 +1,106 @@
+import Layout from "@/components/Layout";
+import { useApp } from "@/context/AppContext";
+import { Package, Clock, Truck, CheckCircle, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+
+const STATUS_CONFIG = {
+  confirmed: { label: "Confirmed", icon: CheckCircle, color: "text-success" },
+  processing: { label: "Processing", icon: Clock, color: "text-accent" },
+  shipped: { label: "Shipped", icon: Truck, color: "text-primary" },
+  delivered: { label: "Delivered", icon: Package, color: "text-success" },
+};
+
+export default function OrderHistory() {
+  const { orders, releaseMode } = useApp();
+
+  const getStatusDisplay = (status: string) => {
+    if (releaseMode) {
+      // RELEASE DEFECT: status labels are swapped — "confirmed" shows as "Processing", "processing" shows as "Confirmed"
+      const swapped: Record<string, string> = {
+        confirmed: "processing",
+        processing: "confirmed",
+        shipped: "shipped",
+        delivered: "delivered",
+      };
+      const mapped = swapped[status] || status;
+      return STATUS_CONFIG[mapped as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.confirmed;
+    }
+    return STATUS_CONFIG[status as keyof typeof STATUS_CONFIG] || STATUS_CONFIG.confirmed;
+  };
+
+  return (
+    <Layout>
+      <div className="container py-8 max-w-3xl">
+        <div className="flex items-center gap-3 mb-6">
+          <Package className="h-6 w-6" aria-hidden="true" />
+          <h1 className="text-3xl font-bold">Order History</h1>
+        </div>
+
+        {orders.length > 0 ? (
+          <div className="space-y-4">
+            {orders.map((order) => {
+              const statusDisplay = getStatusDisplay(order.status);
+              const StatusIcon = statusDisplay.icon;
+
+              return (
+                <article
+                  key={order.id}
+                  className="rounded-lg border bg-card p-5"
+                  aria-label={`Order ${order.id}`}
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
+                    <div>
+                      <p className="font-semibold">Order #{order.id}</p>
+                      <p className="text-sm text-muted-foreground">{order.date}</p>
+                    </div>
+                    <div className={`inline-flex items-center gap-1.5 text-sm font-medium ${statusDisplay.color}`}>
+                      <StatusIcon className="h-4 w-4" aria-hidden="true" />
+                      {statusDisplay.label}
+                    </div>
+                  </div>
+
+                  <ul className="divide-y">
+                    {order.items.map((item, idx) => (
+                      <li key={idx} className="flex items-center gap-3 py-2">
+                        <span className="text-xl" aria-hidden="true">{item.product.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{item.product.name}</p>
+                          <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                        </div>
+                        <span className="text-sm font-medium tabular-nums">
+                          ${(item.product.price * item.quantity).toFixed(2)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-3 pt-3 border-t flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">
+                      Shipping to: {order.shippingName}, {order.shippingCity}
+                    </span>
+                    <span className="font-bold tabular-nums">${order.total.toFixed(2)}</span>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="rounded-lg border bg-card p-12 text-center">
+            <Package className="mx-auto h-12 w-12 text-muted-foreground/40 mb-4" aria-hidden="true" />
+            <p className="text-lg font-medium mb-2">No orders yet</p>
+            <p className="text-sm text-muted-foreground mb-4">
+              Your order history will appear here after your first purchase.
+            </p>
+            <Button asChild variant="outline">
+              <Link to="/products">
+                Start Shopping
+                <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
+        )}
+      </div>
+    </Layout>
+  );
+}
