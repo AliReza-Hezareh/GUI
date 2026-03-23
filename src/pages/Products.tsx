@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
-import { products, CATEGORIES } from "@/data/products";
+import QuickViewModal from "@/components/QuickViewModal";
+import { products, CATEGORIES, type Product } from "@/data/products";
 import { useApp } from "@/context/AppContext";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,9 @@ const SORT_LABELS: Record<SortOption, string> = {
   rating: "Highest Rated",
 };
 
+// Suggested products when search yields no results
+const SUGGESTIONS = ["Pour-Over", "French Press", "Grinder", "Ethiopian"];
+
 export default function Products() {
   const { releaseMode, preferences } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,6 +29,7 @@ export default function Products() {
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [sort, setSort] = useState<SortOption>("featured");
   const [page, setPage] = useState(1);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   const perPage = preferences.itemsPerPage;
 
@@ -80,6 +85,41 @@ export default function Products() {
     }
   };
 
+  const clearAll = () => {
+    setSearch("");
+    setSelectedCategory("");
+    setSort("featured");
+    setPage(1);
+    setSearchParams({});
+  };
+
+  const hasActiveFilters = !!search.trim() || !!selectedCategory || sort !== "featured";
+
+  const handleSuggestionClick = (term: string) => {
+    setSearch(term);
+    setSelectedCategory("");
+    setSort("featured");
+    setPage(1);
+  };
+
+  // Highlight search matches in text
+  const highlightMatch = useCallback(
+    (text: string) => {
+      if (!search.trim()) return text;
+      const q = search.trim();
+      const idx = text.toLowerCase().indexOf(q.toLowerCase());
+      if (idx === -1) return text;
+      return (
+        <>
+          {text.slice(0, idx)}
+          <mark className="bg-accent/30 text-foreground rounded-sm px-0.5">{text.slice(idx, idx + q.length)}</mark>
+          {text.slice(idx + q.length)}
+        </>
+      );
+    },
+    [search]
+  );
+
   return (
     <Layout>
       <div className="container py-8">
@@ -119,7 +159,7 @@ export default function Products() {
         </div>
 
         {/* Filter & Sort row */}
-        <div className="mb-6 flex flex-wrap items-start gap-6">
+        <div className="mb-4 flex flex-wrap items-start gap-6">
           {/* Category filter */}
           <fieldset>
             <legend className="text-sm font-medium mb-2">Category</legend>
@@ -159,15 +199,6 @@ export default function Products() {
                   </button>
                 );
               })}
-              {selectedCategory && (
-                <button
-                  onClick={() => handleCategoryClick("")}
-                  className="rounded-full border px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors focus-ring"
-                  aria-label="Clear category filter"
-                >
-                  Clear
-                </button>
-              )}
             </div>
           </fieldset>
 
@@ -205,6 +236,55 @@ export default function Products() {
           </div>
         </div>
 
+        {/* Active filter chips */}
+        {hasActiveFilters && (
+          <div className="mb-4 flex flex-wrap items-center gap-2" aria-label="Active filters">
+            {search.trim() && (
+              <span className="inline-flex items-center gap-1 rounded-full border bg-secondary/60 px-3 py-1 text-sm">
+                Search: "{search}"
+                <button
+                  onClick={() => { setSearch(""); setPage(1); }}
+                  className="ml-1 rounded-full hover:bg-muted p-0.5 focus-ring"
+                  aria-label={`Remove search filter: ${search}`}
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
+              </span>
+            )}
+            {selectedCategory && (
+              <span className="inline-flex items-center gap-1 rounded-full border bg-secondary/60 px-3 py-1 text-sm">
+                {selectedCategory}
+                <button
+                  onClick={() => handleCategoryClick("")}
+                  className="ml-1 rounded-full hover:bg-muted p-0.5 focus-ring"
+                  aria-label={`Remove category filter: ${selectedCategory}`}
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
+              </span>
+            )}
+            {sort !== "featured" && (
+              <span className="inline-flex items-center gap-1 rounded-full border bg-secondary/60 px-3 py-1 text-sm">
+                Sort: {SORT_LABELS[sort]}
+                <button
+                  onClick={() => { setSort("featured"); setPage(1); }}
+                  className="ml-1 rounded-full hover:bg-muted p-0.5 focus-ring"
+                  aria-label={`Remove sort: ${SORT_LABELS[sort]}`}
+                >
+                  <X className="h-3 w-3" aria-hidden="true" />
+                </button>
+              </span>
+            )}
+            <button
+              onClick={clearAll}
+              className="text-sm text-primary hover:text-primary/80 underline underline-offset-2 focus-ring rounded-sm"
+              aria-label="Clear all filters"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
+
         {/* Results count */}
         <p className="mb-4 text-sm text-muted-foreground" aria-live="polite">
           {filtered.length === 0
@@ -217,7 +297,12 @@ export default function Products() {
           <>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {paginated.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  highlightMatch={search.trim() ? highlightMatch : undefined}
+                  onQuickView={() => setQuickViewProduct(product)}
+                />
               ))}
             </div>
 
@@ -238,15 +323,36 @@ export default function Products() {
             <p className="text-sm text-muted-foreground mb-4">
               Try adjusting your search or filter criteria.
             </p>
-            <Button
-              variant="outline"
-              onClick={() => { setSearch(""); setSelectedCategory(""); setPage(1); setSearchParams({}); }}
-            >
+            {search.trim() && (
+              <div className="mb-4">
+                <p className="text-sm text-muted-foreground mb-2">Try searching for:</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {SUGGESTIONS.map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => handleSuggestionClick(term)}
+                      className="rounded-full border px-3 py-1.5 text-sm text-primary hover:bg-secondary transition-colors focus-ring"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            <Button variant="outline" onClick={clearAll}>
               Clear all filters
             </Button>
           </div>
         )}
       </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <QuickViewModal
+          product={quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+        />
+      )}
     </Layout>
   );
 }

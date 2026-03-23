@@ -17,6 +17,9 @@ const DEFECTS_CHECKLIST = [
   "Star rating input for reviews becomes non-keyboard-accessible",
   "Order history status labels are swapped (confirmed ↔ processing)",
   "Compare table header cells lose scope attribute",
+  "Quick-view modal does not move focus into dialog on open",
+  "Checkout coupon discount is applied but total still shows pre-discount price",
+  "Clear-all-filters button in empty state loses its visible label (icon-only, no aria-label)",
 ];
 
 export default function TeacherPanelPage() {
