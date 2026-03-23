@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useApp } from "@/context/AppContext";
-import { Trash2, Plus, Minus, CheckCircle } from "lucide-react";
+import { Trash2, Plus, Minus, CheckCircle, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FormData {
@@ -29,6 +29,12 @@ const INITIAL_FORM: FormData = {
   zip: "",
 };
 
+// Valid coupon codes
+const COUPONS: Record<string, { type: "percent" | "fixed"; value: number; label: string }> = {
+  BREW10: { type: "percent", value: 10, label: "10% off" },
+  COFFEE20: { type: "fixed", value: 20, label: "$20 off" },
+};
+
 let orderIdCounter = 1000;
 
 export default function Checkout() {
@@ -37,6 +43,20 @@ export default function Checkout() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const confirmRef = useRef<HTMLHeadingElement>(null);
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState("");
+
+  const discount = appliedCoupon && COUPONS[appliedCoupon]
+    ? COUPONS[appliedCoupon].type === "percent"
+      ? cartTotal * (COUPONS[appliedCoupon].value / 100)
+      : Math.min(COUPONS[appliedCoupon].value, cartTotal)
+    : 0;
+
+  // RELEASE DEFECT: discount not subtracted from displayed total
+  const finalTotal = releaseMode ? cartTotal : cartTotal - discount;
 
   useEffect(() => {
     if (submitted && !releaseMode && confirmRef.current) {
@@ -78,6 +98,30 @@ export default function Checkout() {
     return errs;
   };
 
+  const handleApplyCoupon = () => {
+    setCouponError("");
+    const code = couponCode.trim().toUpperCase();
+    if (!code) {
+      setCouponError("Enter a coupon code.");
+      return;
+    }
+    if (COUPONS[code]) {
+      setAppliedCoupon(code);
+      setCouponError("");
+      announce(`Coupon applied: ${COUPONS[code].label}`);
+    } else {
+      setCouponError("Invalid coupon code. Try BREW10 or COFFEE20.");
+      setAppliedCoupon(null);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    setCouponError("");
+    announce("Coupon removed.");
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const errs = validate();
@@ -92,7 +136,7 @@ export default function Checkout() {
     addOrder({
       id: orderId,
       items: cart.map((item) => ({ product: item.product, quantity: item.quantity })),
-      total: cartTotal,
+      total: finalTotal,
       date: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
       status: "confirmed",
       shippingName: form.name.trim(),
@@ -101,6 +145,8 @@ export default function Checkout() {
 
     setSubmitted(true);
     clearCart();
+    setAppliedCoupon(null);
+    setCouponCode("");
     if (!releaseMode) {
       announce("Order placed successfully!");
     }
@@ -413,9 +459,72 @@ export default function Checkout() {
                 ))}
               </ul>
 
-              <div className="mt-4 border-t pt-4 flex justify-between text-lg font-bold">
-                <span>Total</span>
-                <span className="tabular-nums">${cartTotal.toFixed(2)}</span>
+              {/* Coupon Code */}
+              <div className="mt-4 border-t pt-4">
+                <label htmlFor="coupon-code" className="block text-sm font-medium mb-1">
+                  <Tag className="inline h-3.5 w-3.5 mr-1" aria-hidden="true" />
+                  Coupon Code
+                </label>
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between rounded-md border border-success/30 bg-success/5 px-3 py-2">
+                    <span className="text-sm font-medium text-success">
+                      {appliedCoupon} — {COUPONS[appliedCoupon].label}
+                    </span>
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="text-sm text-muted-foreground hover:text-foreground focus-ring rounded-sm underline"
+                      aria-label="Remove coupon"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex gap-2">
+                      <input
+                        id="coupon-code"
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => { setCouponCode(e.target.value); setCouponError(""); }}
+                        placeholder="e.g. BREW10"
+                        className={`h-9 flex-1 rounded-md border px-3 text-sm focus-ring ${couponError ? "border-destructive" : "bg-card"}`}
+                        aria-invalid={!!couponError}
+                        aria-describedby={couponError ? "coupon-error" : undefined}
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={handleApplyCoupon}
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                    {couponError && (
+                      <p id="coupon-error" className="mt-1 text-sm text-destructive" role="alert">
+                        {couponError}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Totals */}
+              <div className="mt-4 border-t pt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Subtotal</span>
+                  <span className="tabular-nums">${cartTotal.toFixed(2)}</span>
+                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-sm text-success">
+                    <span>Discount</span>
+                    <span className="tabular-nums">−${discount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-lg font-bold pt-1 border-t">
+                  <span>Total</span>
+                  <span className="tabular-nums">${finalTotal.toFixed(2)}</span>
+                </div>
               </div>
             </div>
           </aside>

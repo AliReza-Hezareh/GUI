@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Star, Heart, ArrowLeftRight } from "lucide-react";
+import { Star, Heart, ArrowLeftRight, Eye } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import type { Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
@@ -13,9 +13,11 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 interface ProductCardProps {
   product: Product;
+  highlightMatch?: (text: string) => React.ReactNode;
+  onQuickView?: () => void;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, highlightMatch, onQuickView }: ProductCardProps) {
   const { addToCart, releaseMode, announce, toggleWishlist, isWishlisted, toggleCompare, isCompared, compareList } = useApp();
   const wishlisted = isWishlisted(product.id);
   const compared = isCompared(product.id);
@@ -50,7 +52,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   };
 
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onQuickView?.();
+  };
+
   const buttonText = releaseMode ? "Add to Basket" : "Add to Cart";
+  const productName = highlightMatch ? highlightMatch(product.name) : product.name;
+  const productDesc = highlightMatch ? highlightMatch(product.description) : product.description;
 
   const cardContent = (
     <>
@@ -59,7 +69,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       >
         <span className="text-5xl" aria-hidden="true">{product.icon}</span>
 
-        {/* Wishlist & Compare buttons */}
+        {/* Action buttons */}
         <div className="absolute top-2 right-2 flex gap-1">
           {releaseMode ? (
             // RELEASE DEFECT: wishlist button loses accessible label in release mode
@@ -94,6 +104,20 @@ export default function ProductCard({ product }: ProductCardProps) {
             <ArrowLeftRight className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
+
+        {/* Quick View button */}
+        {onQuickView && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+              onClick={handleQuickView}
+              className="inline-flex items-center gap-1.5 rounded-full bg-card/95 backdrop-blur-sm px-3 py-1.5 text-xs font-medium shadow-sm hover:bg-card transition-colors focus-ring"
+              aria-label={`Quick view ${product.name}`}
+            >
+              <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+              Quick View
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-4">
@@ -108,12 +132,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             to={`/products/${product.id}`}
             className="hover:text-primary transition-colors focus-ring rounded-sm"
           >
-            {product.name}
+            {productName}
           </Link>
         </h3>
 
         <p className="mb-3 flex-1 text-sm text-muted-foreground line-clamp-2">
-          {product.description}
+          {productDesc}
         </p>
 
         <div className="mb-3 flex items-center gap-1.5">
