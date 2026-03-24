@@ -21,6 +21,8 @@ const DEFECTS_CHECKLIST = [
   "Quick-view modal does not move focus into dialog on open",
   "Checkout coupon discount is applied but total still shows pre-discount price",
   "Clear-all-filters button in empty state loses its visible label (icon-only, no aria-label)",
+  "Login password field type changes from 'password' to 'text' (security regression)",
+  "Signup password confirmation mismatch check is skipped",
 ];
 
 export default function TeacherPanelPage() {
