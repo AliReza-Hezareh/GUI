@@ -27,6 +27,7 @@ const DEFECTS_CHECKLIST = [
 
 export default function TeacherPanelPage() {
   const { releaseMode, setReleaseMode, resetAll } = useApp();
+  const { resetAuth } = useAuth();
   const [showChecklist, setShowChecklist] = useState(false);
 
   return (
