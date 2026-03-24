@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
@@ -24,9 +24,13 @@ export default function Products() {
   const { releaseMode, preferences } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialCategory = searchParams.get("category") || "";
+  const categoryFromUrl = searchParams.get("category") || "";
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
+
+  useEffect(() => {
+    setSelectedCategory(categoryFromUrl);
+  }, [categoryFromUrl]);
   const [sort, setSort] = useState<SortOption>("featured");
   const [page, setPage] = useState(1);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);

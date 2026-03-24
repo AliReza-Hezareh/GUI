@@ -45,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             { label: "Brewing Equipment", to: "/products?category=Brewing%20Equipment" },
             { label: "Grinders", to: "/products?category=Grinders" },
             { label: "Accessories", to: "/products?category=Accessories" },
-            { label: "Beans", to: "/products?category=Beans" },
+            { label: "Coffee Beans", to: "/products?category=Coffee%20Beans" },
           ],
         },
         {
@@ -64,7 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             { label: "Brewing Equipment", to: "/products?category=Brewing%20Equipment" },
             { label: "Grinders", to: "/products?category=Grinders" },
             { label: "Accessories", to: "/products?category=Accessories" },
-            { label: "Beans", to: "/products?category=Beans" },
+            { label: "Coffee Beans", to: "/products?category=Coffee%20Beans" },
           ],
         },
         {
