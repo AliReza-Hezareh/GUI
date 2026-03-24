@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, Menu, X, Coffee, Heart, ArrowLeftRight } from "lucide-react";
+import { ShoppingCart, Menu, X, Coffee, Heart, ArrowLeftRight, User, LogOut } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { cartCount, releaseMode, wishlist, compareList } = useApp();
+  const { user, isLoggedIn, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
@@ -94,6 +96,35 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-1">
+            {/* Auth status */}
+            {isLoggedIn ? (
+              <div className="hidden md:flex items-center gap-1">
+                <Link
+                  to="/account"
+                  className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors focus-ring"
+                  aria-label={`Account: ${user?.displayName || user?.email}`}
+                >
+                  <User className="h-4 w-4" aria-hidden="true" />
+                  <span className="max-w-[120px] truncate">{user?.displayName || user?.email}</span>
+                </Link>
+                <button
+                  onClick={logout}
+                  className="inline-flex items-center rounded-md p-2 text-muted-foreground hover:bg-secondary transition-colors focus-ring"
+                  aria-label="Log out"
+                >
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="hidden md:inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors focus-ring"
+              >
+                <User className="h-4 w-4" aria-hidden="true" />
+                Log In
+              </Link>
+            )}
+
             {/* Wishlist */}
             <Link
               to="/wishlist"
@@ -190,6 +221,42 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   Order History
                 </Link>
               </li>
+              {isLoggedIn ? (
+                <>
+                  <li className="border-t mt-1 pt-2">
+                    <span className="block px-3 py-1 text-xs text-muted-foreground">
+                      Signed in as {user?.displayName || user?.email}
+                    </span>
+                  </li>
+                  <li>
+                    <button
+                      onClick={logout}
+                      className="block w-full text-left rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
+                    >
+                      Log Out
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="border-t mt-1 pt-2">
+                    <Link
+                      to="/login"
+                      className="block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
+                    >
+                      Log In
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/signup"
+                      className="block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
+                    >
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
         )}

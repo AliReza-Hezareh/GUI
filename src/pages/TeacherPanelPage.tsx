@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
 
@@ -20,10 +21,13 @@ const DEFECTS_CHECKLIST = [
   "Quick-view modal does not move focus into dialog on open",
   "Checkout coupon discount is applied but total still shows pre-discount price",
   "Clear-all-filters button in empty state loses its visible label (icon-only, no aria-label)",
+  "Login password field type changes from 'password' to 'text' (security regression)",
+  "Signup password confirmation mismatch check is skipped",
 ];
 
 export default function TeacherPanelPage() {
   const { releaseMode, setReleaseMode, resetAll } = useApp();
+  const { resetAuth } = useAuth();
   const [showChecklist, setShowChecklist] = useState(false);
 
   return (
@@ -69,6 +73,7 @@ export default function TeacherPanelPage() {
             variant="outline"
             onClick={() => {
               resetAll();
+              resetAuth();
               window.location.reload();
             }}
             className="w-full"
