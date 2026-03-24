@@ -73,6 +73,7 @@ export default function TeacherPanelPage() {
             variant="outline"
             onClick={() => {
               resetAll();
+              resetAuth();
               window.location.reload();
             }}
             className="w-full"
