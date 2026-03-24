@@ -24,9 +24,15 @@ export default function Products() {
   const { releaseMode, preferences } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialCategory = searchParams.get("category") || "";
+  const categoryFromUrl = searchParams.get("category") || "";
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
+
+  // Sync category when URL changes (e.g. footer links)
+  const prevCategoryRef = useState(categoryFromUrl)[0];
+  if (categoryFromUrl !== prevCategoryRef && categoryFromUrl !== selectedCategory) {
+    setSelectedCategory(categoryFromUrl);
+  }
   const [sort, setSort] = useState<SortOption>("featured");
   const [page, setPage] = useState(1);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
