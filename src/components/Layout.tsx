@@ -33,29 +33,55 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     ? [
         {
           title: "Support",
-          links: ["Help Center", "Returns", "Shipping Info"],
+          links: [
+            { label: "Help Center", to: "/contact" },
+            { label: "Returns", to: "/contact" },
+            { label: "Shipping Info", to: "/contact" },
+          ],
         },
         {
           title: "Shop",
-          links: ["Brewing Equipment", "Grinders", "Accessories", "Beans"],
+          links: [
+            { label: "Brewing Equipment", to: "/products?category=Brewing%20Equipment" },
+            { label: "Grinders", to: "/products?category=Grinders" },
+            { label: "Accessories", to: "/products?category=Accessories" },
+            { label: "Beans", to: "/products?category=Beans" },
+          ],
         },
         {
           title: "Company",
-          links: ["About", "Blog", "Careers"],
+          links: [
+            { label: "About", to: "/contact" },
+            { label: "Blog", to: "/contact" },
+            { label: "Careers", to: "/contact" },
+          ],
         },
       ]
     : [
         {
           title: "Shop",
-          links: ["Brewing Equipment", "Grinders", "Accessories", "Beans"],
+          links: [
+            { label: "Brewing Equipment", to: "/products?category=Brewing%20Equipment" },
+            { label: "Grinders", to: "/products?category=Grinders" },
+            { label: "Accessories", to: "/products?category=Accessories" },
+            { label: "Beans", to: "/products?category=Beans" },
+          ],
         },
         {
           title: "Company",
-          links: ["About", "Blog", "Careers"],
+          links: [
+            { label: "About", to: "/contact" },
+            { label: "Blog", to: "/contact" },
+            { label: "Careers", to: "/contact" },
+          ],
         },
         {
           title: "Support",
-          links: ["Help Center", "Returns", "Shipping Info"],
+          links: [
+            { label: "Help Center", to: "/contact" },
+            { label: "Returns", to: "/contact" },
+            { label: "Shipping Info", to: "/contact" },
+          ],
         },
       ];
 
@@ -282,11 +308,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <div key={section.title}>
                 <h3 className="mb-3 text-sm font-semibold">{section.title}</h3>
                 <ul className="space-y-2">
-                  {section.links.map((link) => (
-                    <li key={link}>
-                      <span className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
-                        {link}
-                      </span>
+                  {section.links.map(({ label, to }) => (
+                    <li key={label}>
+                      <Link to={to} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
