@@ -282,11 +282,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <div key={section.title}>
                 <h3 className="mb-3 text-sm font-semibold">{section.title}</h3>
                 <ul className="space-y-2">
-                  {section.links.map((link) => (
-                    <li key={link}>
-                      <span className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors">
-                        {link}
-                      </span>
+                  {section.links.map(({ label, to }) => (
+                    <li key={label}>
+                      <Link to={to} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                        {label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
