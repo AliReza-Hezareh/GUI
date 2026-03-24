@@ -28,11 +28,9 @@ export default function Products() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
 
-  // Sync category when URL changes (e.g. footer links)
-  const prevCategoryRef = useState(categoryFromUrl)[0];
-  if (categoryFromUrl !== prevCategoryRef && categoryFromUrl !== selectedCategory) {
+  useEffect(() => {
     setSelectedCategory(categoryFromUrl);
-  }
+  }, [categoryFromUrl]);
   const [sort, setSort] = useState<SortOption>("featured");
   const [page, setPage] = useState(1);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
