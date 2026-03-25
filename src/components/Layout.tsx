@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           title: "Support",
           links: [
             { label: "Help Center", to: "/contact" },
-            { label: "Returns", to: "/contact" },
+            { label: "Returns", to: "/reclamation" },
             { label: "Shipping Info", to: "/contact" },
           ],
         },
@@ -79,7 +79,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           title: "Support",
           links: [
             { label: "Help Center", to: "/contact" },
-            { label: "Returns", to: "/contact" },
+            { label: "Returns", to: "/reclamation" },
             { label: "Shipping Info", to: "/contact" },
           ],
         },

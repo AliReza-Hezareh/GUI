@@ -18,6 +18,7 @@ import ReadmePage from "./pages/ReadmePage";
 import Wishlist from "./pages/Wishlist";
 import OrderHistory from "./pages/OrderHistory";
 import Compare from "./pages/Compare";
+import Reclamation from "./pages/Reclamation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/orders" element={<OrderHistory />} />
               <Route path="/compare" element={<Compare />} />
+              <Route path="/reclamation" element={<Reclamation />} />
               <Route path="/teacher" element={<TeacherPanelPage />} />
               <Route path="/readme" element={<ReadmePage />} />
               <Route path="*" element={<NotFound />} />
