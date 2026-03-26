@@ -2,8 +2,22 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useApp } from "@/context/AppContext";
-import { Trash2, Plus, Minus, CheckCircle, Tag } from "lucide-react";
+import { Trash2, Plus, Minus, CheckCircle, Tag, CreditCard, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+interface PaymentData {
+  cardNumber: string;
+  expiry: string;
+  cvv: string;
+  cardName: string;
+}
+
+const INITIAL_PAYMENT: PaymentData = {
+  cardNumber: "",
+  expiry: "",
+  cvv: "",
+  cardName: "",
+};
 
 interface FormData {
   name: string;
