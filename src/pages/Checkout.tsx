@@ -157,7 +157,9 @@ export default function Checkout() {
     e.preventDefault();
     const errs = validate();
     setErrors(errs);
-    if (Object.keys(errs).length > 0) {
+    const pErrs = validatePayment();
+    setPaymentErrors(pErrs);
+    if (Object.keys(errs).length > 0 || Object.keys(pErrs).length > 0) {
       announce("Form has errors. Please review and correct them.");
       return;
     }
@@ -174,12 +176,36 @@ export default function Checkout() {
       shippingCity: form.city.trim(),
     });
 
+    setPlacedOrderId(orderId);
     setSubmitted(true);
     clearCart();
     setAppliedCoupon(null);
     setCouponCode("");
     if (!releaseMode) {
       announce("Order placed successfully!");
+    }
+  };
+
+  const handlePaymentChange = (field: keyof PaymentData, value: string) => {
+    // Auto-format card number with spaces
+    if (field === "cardNumber") {
+      value = value.replace(/\D/g, "").slice(0, 16).replace(/(\d{4})(?=\d)/g, "$1 ");
+    }
+    // Auto-format expiry
+    if (field === "expiry") {
+      value = value.replace(/\D/g, "").slice(0, 4);
+      if (value.length >= 3) value = value.slice(0, 2) + "/" + value.slice(2);
+    }
+    if (field === "cvv") {
+      value = value.replace(/\D/g, "").slice(0, 4);
+    }
+    setPayment((prev) => ({ ...prev, [field]: value }));
+    if (paymentErrors[field]) {
+      setPaymentErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
     }
   };
 
