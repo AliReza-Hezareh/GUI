@@ -2,8 +2,22 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useApp } from "@/context/AppContext";
-import { Trash2, Plus, Minus, CheckCircle, Tag } from "lucide-react";
+import { Trash2, Plus, Minus, CheckCircle, Tag, CreditCard, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+interface PaymentData {
+  cardNumber: string;
+  expiry: string;
+  cvv: string;
+  cardName: string;
+}
+
+const INITIAL_PAYMENT: PaymentData = {
+  cardNumber: "",
+  expiry: "",
+  cvv: "",
+  cardName: "",
+};
 
 interface FormData {
   name: string;
@@ -48,6 +62,10 @@ export default function Checkout() {
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
   const [couponError, setCouponError] = useState("");
+
+  const [payment, setPayment] = useState<PaymentData>(INITIAL_PAYMENT);
+  const [paymentErrors, setPaymentErrors] = useState<FormErrors>({});
+  const [placedOrderId, setPlacedOrderId] = useState<string>("");
 
   const discount = appliedCoupon && COUPONS[appliedCoupon]
     ? COUPONS[appliedCoupon].type === "percent"
@@ -98,6 +116,19 @@ export default function Checkout() {
     return errs;
   };
 
+  const validatePayment = (): FormErrors => {
+    const errs: FormErrors = {};
+    if (!payment.cardName.trim()) errs.cardName = "Name on card is required.";
+    const digits = payment.cardNumber.replace(/\s/g, "");
+    if (!digits) errs.cardNumber = "Card number is required.";
+    else if (!/^\d{16}$/.test(digits)) errs.cardNumber = "Enter a valid 16-digit card number.";
+    if (!payment.expiry.trim()) errs.expiry = "Expiry date is required.";
+    else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(payment.expiry.trim())) errs.expiry = "Use MM/YY format.";
+    if (!payment.cvv.trim()) errs.cvv = "CVV is required.";
+    else if (!/^\d{3,4}$/.test(payment.cvv.trim())) errs.cvv = "Enter a valid 3 or 4 digit CVV.";
+    return errs;
+  };
+
   const handleApplyCoupon = () => {
     setCouponError("");
     const code = couponCode.trim().toUpperCase();
@@ -126,7 +157,9 @@ export default function Checkout() {
     e.preventDefault();
     const errs = validate();
     setErrors(errs);
-    if (Object.keys(errs).length > 0) {
+    const pErrs = validatePayment();
+    setPaymentErrors(pErrs);
+    if (Object.keys(errs).length > 0 || Object.keys(pErrs).length > 0) {
       announce("Form has errors. Please review and correct them.");
       return;
     }
@@ -143,12 +176,36 @@ export default function Checkout() {
       shippingCity: form.city.trim(),
     });
 
+    setPlacedOrderId(orderId);
     setSubmitted(true);
     clearCart();
     setAppliedCoupon(null);
     setCouponCode("");
     if (!releaseMode) {
       announce("Order placed successfully!");
+    }
+  };
+
+  const handlePaymentChange = (field: keyof PaymentData, value: string) => {
+    // Auto-format card number with spaces
+    if (field === "cardNumber") {
+      value = value.replace(/\D/g, "").slice(0, 16).replace(/(\d{4})(?=\d)/g, "$1 ");
+    }
+    // Auto-format expiry
+    if (field === "expiry") {
+      value = value.replace(/\D/g, "").slice(0, 4);
+      if (value.length >= 3) value = value.slice(0, 2) + "/" + value.slice(2);
+    }
+    if (field === "cvv") {
+      value = value.replace(/\D/g, "").slice(0, 4);
+    }
+    setPayment((prev) => ({ ...prev, [field]: value }));
+    if (paymentErrors[field]) {
+      setPaymentErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
     }
   };
 
@@ -179,10 +236,12 @@ export default function Checkout() {
             tabIndex={-1}
             className="text-2xl font-bold mb-3 outline-none"
           >
-            {releaseMode
-              ? "Order Received"
-              : "Order Confirmed!"}
+            {releaseMode ? "Order Received" : "Order Confirmed!"}
           </h1>
+          <div className="rounded-lg border bg-card p-4 mb-6 inline-block">
+            <p className="text-sm text-muted-foreground mb-1">Order ID</p>
+            <p className="text-xl font-mono font-bold tracking-wide">#{placedOrderId}</p>
+          </div>
           <p className="text-muted-foreground mb-6">
             {releaseMode
               ? "Your order is under review and may take 3–5 business days to process. We'll reach out if there are any issues."
@@ -402,9 +461,114 @@ export default function Checkout() {
                 </div>
               </fieldset>
 
+              {/* Mock Payment Form */}
+              <fieldset className="mt-8">
+                <legend className="text-lg font-semibold mb-2 flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" aria-hidden="true" />
+                  Payment Information
+                </legend>
+                <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-4 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span><strong>DEMO ONLY</strong> — This is a simulated payment form. No real transactions are processed and no card data is stored or transmitted.</span>
+                  </div>
+                </div>
+
+                <div className="grid gap-4">
+                  <div>
+                    <label htmlFor="checkout-cardname" className="block text-sm font-medium mb-1">
+                      Name on Card {reqIndicator}
+                    </label>
+                    <input
+                      id="checkout-cardname"
+                      type="text"
+                      value={payment.cardName}
+                      onChange={(e) => handlePaymentChange("cardName", e.target.value)}
+                      className={`h-10 w-full rounded-md border px-3 text-sm focus-ring ${paymentErrors.cardName ? "border-destructive" : "bg-card"}`}
+                      aria-required="true"
+                      aria-invalid={!!paymentErrors.cardName}
+                      aria-describedby={paymentErrors.cardName ? "cardname-error" : undefined}
+                      autoComplete="cc-name"
+                      placeholder="John Doe"
+                    />
+                    {paymentErrors.cardName && (
+                      <p id="cardname-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.cardName}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="checkout-cardnumber" className="block text-sm font-medium mb-1">
+                      Card Number {reqIndicator}
+                    </label>
+                    <input
+                      id="checkout-cardnumber"
+                      type="text"
+                      inputMode="numeric"
+                      value={payment.cardNumber}
+                      onChange={(e) => handlePaymentChange("cardNumber", e.target.value)}
+                      className={`h-10 w-full rounded-md border px-3 text-sm focus-ring font-mono ${paymentErrors.cardNumber ? "border-destructive" : "bg-card"}`}
+                      aria-required="true"
+                      aria-invalid={!!paymentErrors.cardNumber}
+                      aria-describedby={paymentErrors.cardNumber ? "cardnumber-error" : undefined}
+                      autoComplete="cc-number"
+                      placeholder="4242 4242 4242 4242"
+                    />
+                    {paymentErrors.cardNumber && (
+                      <p id="cardnumber-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.cardNumber}</p>
+                    )}
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="checkout-expiry" className="block text-sm font-medium mb-1">
+                        Expiry Date {reqIndicator}
+                      </label>
+                      <input
+                        id="checkout-expiry"
+                        type="text"
+                        inputMode="numeric"
+                        value={payment.expiry}
+                        onChange={(e) => handlePaymentChange("expiry", e.target.value)}
+                        className={`h-10 w-full rounded-md border px-3 text-sm focus-ring font-mono ${paymentErrors.expiry ? "border-destructive" : "bg-card"}`}
+                        aria-required="true"
+                        aria-invalid={!!paymentErrors.expiry}
+                        aria-describedby={paymentErrors.expiry ? "expiry-error" : undefined}
+                        autoComplete="cc-exp"
+                        placeholder="MM/YY"
+                      />
+                      {paymentErrors.expiry && (
+                        <p id="expiry-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.expiry}</p>
+                      )}
+                    </div>
+                    <div>
+                      <label htmlFor="checkout-cvv" className="block text-sm font-medium mb-1">
+                        CVV {reqIndicator}
+                      </label>
+                      <input
+                        id="checkout-cvv"
+                        type="text"
+                        inputMode="numeric"
+                        value={payment.cvv}
+                        onChange={(e) => handlePaymentChange("cvv", e.target.value)}
+                        className={`h-10 w-full rounded-md border px-3 text-sm focus-ring font-mono ${paymentErrors.cvv ? "border-destructive" : "bg-card"}`}
+                        aria-required="true"
+                        aria-invalid={!!paymentErrors.cvv}
+                        aria-describedby={paymentErrors.cvv ? "cvv-error" : undefined}
+                        autoComplete="cc-csc"
+                        placeholder="123"
+                      />
+                      {paymentErrors.cvv && (
+                        <p id="cvv-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.cvv}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
               <div className="mt-8">
                 <Button type="submit" size="lg" className="w-full sm:w-auto">
-                  Place Order
+                  <Lock className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Place Order (Demo)
                 </Button>
               </div>
             </form>
