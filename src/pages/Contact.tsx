@@ -12,14 +12,14 @@ export default function Contact() {
 
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!form.name.trim()) errs.name = "Name is required.";
-    if (!form.email.trim()) errs.email = "Email is required.";
+    if (!form.name.trim()) errs.name = "Namn krävs.";
+    if (!form.email.trim()) errs.email = "E-postadress krävs.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      errs.email = "Enter a valid email address.";
-    if (!form.subject.trim()) errs.subject = "Subject is required.";
-    if (!form.message.trim()) errs.message = "Message is required.";
+      errs.email = "Ange en giltig e-postadress.";
+    if (!form.subject.trim()) errs.subject = "Ämne krävs.";
+    if (!form.message.trim()) errs.message = "Meddelande krävs.";
     else if (form.message.trim().length < 10)
-      errs.message = "Message must be at least 10 characters.";
+      errs.message = "Meddelandet måste vara minst 10 tecken.";
     return errs;
   };
 
@@ -28,11 +28,11 @@ export default function Contact() {
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) {
-      announce("Form has errors. Please review.");
+      announce("Formuläret har fel. Vänligen granska.");
       return;
     }
     setSent(true);
-    announce("Message sent successfully.");
+    announce("Meddelande skickat.");
   };
 
   const handleChange = (field: string, value: string) => {
@@ -91,31 +91,31 @@ export default function Contact() {
   return (
     <Layout>
       <div className="container py-8 max-w-4xl">
-        <h1 className="text-3xl font-bold mb-2">Contact Us</h1>
+        <h1 className="text-3xl font-bold mb-2">Kontakta oss</h1>
         <p className="text-muted-foreground mb-8">
-          Have a question about our products or your order? We'd love to hear from you.
+          Har du en fråga om våra produkter eller din beställning? Vi vill gärna höra från dig.
         </p>
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             {sent ? (
               <div className="rounded-lg border bg-card p-8 text-center">
-                <h2 className="text-xl font-bold mb-2 text-success">Message Sent!</h2>
+                <h2 className="text-xl font-bold mb-2 text-success">Meddelande skickat!</h2>
                 <p className="text-muted-foreground mb-4">
-                  Thank you for reaching out. We'll get back to you within 1–2 business days.
+                  Tack för att du hör av dig. Vi återkommer inom 1–2 arbetsdagar.
                 </p>
                 <Button onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}>
-                  Send Another Message
+                  Skicka nytt meddelande
                 </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                {renderField("contact-name", "Your Name", "name")}
-                {renderField("contact-email", "Email Address", "email", "email")}
-                {renderField("contact-subject", "Subject", "subject")}
-                {renderField("contact-message", "Message", "message", "text", true)}
+                {renderField("contact-name", "Ditt namn", "name")}
+                {renderField("contact-email", "E-postadress", "email", "email")}
+                {renderField("contact-subject", "Ämne", "subject")}
+                {renderField("contact-message", "Meddelande", "message", "text", true)}
                 <Button type="submit" size="lg">
-                  Send Message
+                  Skicka meddelande
                 </Button>
               </form>
             )}
@@ -123,29 +123,29 @@ export default function Contact() {
 
           <aside className="space-y-6">
             <div className="rounded-lg border bg-card p-6">
-              <h2 className="font-semibold mb-4">Get in Touch</h2>
+              <h2 className="font-semibold mb-4">Kontaktuppgifter</h2>
               <ul className="space-y-4 text-sm">
                 <li className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
                   <div>
-                    <p className="font-medium">Email</p>
-                    <p className="text-muted-foreground">support@brewscape.example</p>
+                    <p className="font-medium">E-post</p>
+                    <p className="text-muted-foreground">support@brewscape.se</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
                   <div>
-                    <p className="font-medium">Phone</p>
-                    <p className="text-muted-foreground">(555) 012-3456</p>
+                    <p className="font-medium">Telefon</p>
+                    <p className="text-muted-foreground">08-123 456 78</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" aria-hidden="true" />
                   <div>
-                    <p className="font-medium">Address</p>
+                    <p className="font-medium">Adress</p>
                     <p className="text-muted-foreground">
-                      742 Roast Lane<br />
-                      Portland, OR 97201
+                      Kaffevägen 42<br />
+                      111 22 Stockholm
                     </p>
                   </div>
                 </li>

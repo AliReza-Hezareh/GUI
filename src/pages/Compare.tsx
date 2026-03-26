@@ -16,18 +16,18 @@ export default function Compare() {
     if (!product.inStock) return;
     addToCart(product);
     if (!releaseMode) {
-      announce(`${product.name} added to cart`);
+      announce(`${product.name} tillagd i kundvagnen`);
     }
   };
 
   const attributes = [
-    { label: "Price", render: (p: typeof products[0]) => `$${p.price.toFixed(2)}` },
-    { label: "Category", render: (p: typeof products[0]) => p.category },
-    { label: "Rating", render: (p: typeof products[0]) => `${p.rating} / 5` },
-    { label: "Reviews", render: (p: typeof products[0]) => `${p.reviewCount}` },
-    { label: "In Stock", render: (p: typeof products[0]) => p.inStock ? "Yes" : "No" },
+    { label: "Pris", render: (p: typeof products[0]) => `${p.price.toFixed(0)} kr` },
+    { label: "Kategori", render: (p: typeof products[0]) => p.category },
+    { label: "Betyg", render: (p: typeof products[0]) => `${p.rating} / 5` },
+    { label: "Recensioner", render: (p: typeof products[0]) => `${p.reviewCount}` },
+    { label: "I lager", render: (p: typeof products[0]) => p.inStock ? "Ja" : "Nej" },
     ...Array.from({ length: 4 }, (_, i) => ({
-      label: `Feature ${i + 1}`,
+      label: `Egenskap ${i + 1}`,
       render: (p: typeof products[0]) => p.features[i] || "—",
     })),
   ];
@@ -36,25 +36,24 @@ export default function Compare() {
     <Layout>
       <div className="container py-8">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Compare Products</h1>
+          <h1 className="text-3xl font-bold">Jämför produkter</h1>
           {compared.length > 0 && (
             <Button variant="outline" size="sm" onClick={clearCompare}>
-              Clear All
+              Rensa alla
             </Button>
           )}
         </div>
 
         {compared.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse" aria-label="Product comparison">
+            <table className="w-full border-collapse" aria-label="Produktjämförelse">
               <thead>
                 <tr>
-                  {/* RELEASE DEFECT: th scope removed in release mode */}
                   <th
                     className="text-left text-sm font-medium text-muted-foreground p-3 border-b min-w-[120px]"
                     {...(releaseMode ? {} : { scope: "col" })}
                   >
-                    Attribute
+                    Egenskap
                   </th>
                   {compared.map((product) => (
                     <th
@@ -75,7 +74,7 @@ export default function Compare() {
                         <button
                           onClick={() => toggleCompare(product.id)}
                           className="shrink-0 p-1 rounded hover:bg-secondary transition-colors focus-ring"
-                          aria-label={`Remove ${product.name} from comparison`}
+                          aria-label={`Ta bort ${product.name} från jämförelse`}
                         >
                           <X className="h-4 w-4" aria-hidden="true" />
                         </button>
@@ -85,9 +84,8 @@ export default function Compare() {
                 </tr>
               </thead>
               <tbody>
-                {/* Product icon row */}
                 <tr>
-                  <td className="p-3 border-b text-sm font-medium text-muted-foreground">Product</td>
+                  <td className="p-3 border-b text-sm font-medium text-muted-foreground">Produkt</td>
                   {compared.map((product) => (
                     <td key={product.id} className="p-3 border-b">
                       <div className="flex h-20 w-20 items-center justify-center rounded-md bg-secondary text-3xl">
@@ -107,12 +105,12 @@ export default function Compare() {
                     </td>
                     {compared.map((product) => (
                       <td key={product.id} className="p-3 border-b text-sm">
-                        {attr.label === "Rating" ? (
+                        {attr.label === "Betyg" ? (
                           <span className="inline-flex items-center gap-1">
                             <Star className="h-4 w-4 fill-accent text-accent" aria-hidden="true" />
                             {attr.render(product)}
                           </span>
-                        ) : attr.label === "In Stock" ? (
+                        ) : attr.label === "I lager" ? (
                           <span className={product.inStock ? "text-success font-medium" : "text-destructive font-medium"}>
                             {attr.render(product)}
                           </span>
@@ -124,9 +122,8 @@ export default function Compare() {
                   </tr>
                 ))}
 
-                {/* Add to cart row */}
                 <tr>
-                  <td className="p-3 text-sm font-medium text-muted-foreground">Action</td>
+                  <td className="p-3 text-sm font-medium text-muted-foreground">Åtgärd</td>
                   {compared.map((product) => (
                     <td key={product.id} className="p-3">
                       <Button
@@ -135,8 +132,8 @@ export default function Compare() {
                         disabled={!product.inStock}
                       >
                         {product.inStock
-                          ? releaseMode ? "Add to Basket" : "Add to Cart"
-                          : "Out of Stock"}
+                          ? releaseMode ? "Lägg i korgen" : "Lägg i kundvagn"
+                          : "Slut i lager"}
                       </Button>
                     </td>
                   ))}
@@ -146,13 +143,13 @@ export default function Compare() {
           </div>
         ) : (
           <div className="rounded-lg border bg-card p-12 text-center">
-            <p className="text-lg font-medium mb-2">No products to compare</p>
+            <p className="text-lg font-medium mb-2">Inga produkter att jämföra</p>
             <p className="text-sm text-muted-foreground mb-4">
-              Select up to 3 products to compare by clicking the compare icon on product cards.
+              Välj upp till 3 produkter att jämföra genom att klicka på jämförelseikonen på produktkorten.
             </p>
             <Button asChild variant="outline">
               <Link to="/products">
-                Browse Products
+                Utforska produkter
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>

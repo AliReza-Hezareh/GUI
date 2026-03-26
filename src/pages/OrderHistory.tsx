@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const STATUS_CONFIG = {
-  confirmed: { label: "Confirmed", icon: CheckCircle, color: "text-success" },
-  processing: { label: "Processing", icon: Clock, color: "text-accent" },
-  shipped: { label: "Shipped", icon: Truck, color: "text-primary" },
-  delivered: { label: "Delivered", icon: Package, color: "text-success" },
+  confirmed: { label: "Bekräftad", icon: CheckCircle, color: "text-success" },
+  processing: { label: "Behandlas", icon: Clock, color: "text-accent" },
+  shipped: { label: "Skickad", icon: Truck, color: "text-primary" },
+  delivered: { label: "Levererad", icon: Package, color: "text-success" },
 };
 
 export default function OrderHistory() {
@@ -16,7 +16,6 @@ export default function OrderHistory() {
 
   const getStatusDisplay = (status: string) => {
     if (releaseMode) {
-      // RELEASE DEFECT: status labels are swapped — "confirmed" shows as "Processing", "processing" shows as "Confirmed"
       const swapped: Record<string, string> = {
         confirmed: "processing",
         processing: "confirmed",
@@ -34,7 +33,7 @@ export default function OrderHistory() {
       <div className="container py-8 max-w-3xl">
         <div className="flex items-center gap-3 mb-6">
           <Package className="h-6 w-6" aria-hidden="true" />
-          <h1 className="text-3xl font-bold">Order History</h1>
+          <h1 className="text-3xl font-bold">Orderhistorik</h1>
         </div>
 
         {orders.length > 0 ? (
@@ -66,10 +65,10 @@ export default function OrderHistory() {
                         <span className="text-xl" aria-hidden="true">{item.product.icon}</span>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">{item.product.name}</p>
-                          <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                          <p className="text-xs text-muted-foreground">Antal: {item.quantity}</p>
                         </div>
                         <span className="text-sm font-medium tabular-nums">
-                          ${(item.product.price * item.quantity).toFixed(2)}
+                          {(item.product.price * item.quantity).toFixed(0)} kr
                         </span>
                       </li>
                     ))}
@@ -77,9 +76,9 @@ export default function OrderHistory() {
 
                   <div className="mt-3 pt-3 border-t flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">
-                      Shipping to: {order.shippingName}, {order.shippingCity}
+                      Leverans till: {order.shippingName}, {order.shippingCity}
                     </span>
-                    <span className="font-bold tabular-nums">${order.total.toFixed(2)}</span>
+                    <span className="font-bold tabular-nums">{order.total.toFixed(0)} kr</span>
                   </div>
                 </article>
               );
@@ -88,13 +87,13 @@ export default function OrderHistory() {
         ) : (
           <div className="rounded-lg border bg-card p-12 text-center">
             <Package className="mx-auto h-12 w-12 text-muted-foreground/40 mb-4" aria-hidden="true" />
-            <p className="text-lg font-medium mb-2">No orders yet</p>
+            <p className="text-lg font-medium mb-2">Inga beställningar ännu</p>
             <p className="text-sm text-muted-foreground mb-4">
-              Your order history will appear here after your first purchase.
+              Din orderhistorik visas här efter ditt första köp.
             </p>
             <Button asChild variant="outline">
               <Link to="/products">
-                Start Shopping
+                Börja handla
                 <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>

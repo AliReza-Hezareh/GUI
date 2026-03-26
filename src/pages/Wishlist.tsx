@@ -16,9 +16,9 @@ export default function Wishlist() {
       <div className="container py-8">
         <div className="flex items-center gap-3 mb-6">
           <Heart className="h-6 w-6 text-destructive" aria-hidden="true" />
-          <h1 className="text-3xl font-bold">Wishlist</h1>
+          <h1 className="text-3xl font-bold">Önskelista</h1>
           <span className="text-muted-foreground text-sm">
-            ({wishlisted.length} {wishlisted.length === 1 ? "item" : "items"})
+            ({wishlisted.length} {wishlisted.length === 1 ? "artikel" : "artiklar"})
           </span>
         </div>
 
@@ -31,12 +31,12 @@ export default function Wishlist() {
         ) : (
           <div className="rounded-lg border bg-card p-12 text-center">
             <Heart className="mx-auto h-12 w-12 text-muted-foreground/40 mb-4" aria-hidden="true" />
-            <p className="text-lg font-medium mb-2">Your wishlist is empty</p>
+            <p className="text-lg font-medium mb-2">Din önskelista är tom</p>
             <p className="text-sm text-muted-foreground mb-4">
-              Save products you love by clicking the heart icon.
+              Spara produkter du gillar genom att klicka på hjärtikonen.
             </p>
             <Button asChild variant="outline">
-              <Link to="/products">Browse Products</Link>
+              <Link to="/products">Utforska produkter</Link>
             </Button>
           </div>
         )}

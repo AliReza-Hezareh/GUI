@@ -11,14 +11,13 @@ import { Button } from "@/components/ui/button";
 type SortOption = "featured" | "price-asc" | "price-desc" | "rating";
 
 const SORT_LABELS: Record<SortOption, string> = {
-  featured: "Featured",
-  "price-asc": "Price: Low to High",
-  "price-desc": "Price: High to Low",
-  rating: "Highest Rated",
+  featured: "Utvalda",
+  "price-asc": "Pris: Lägst först",
+  "price-desc": "Pris: Högst först",
+  rating: "Högst betyg",
 };
 
-// Suggested products when search yields no results
-const SUGGESTIONS = ["Pour-Over", "French Press", "Grinder", "Ethiopian"];
+const SUGGESTIONS = ["Pour-Over", "French Press", "Kvarn", "Etiopisk"];
 
 export default function Products() {
   const { releaseMode, preferences } = useApp();
@@ -56,7 +55,6 @@ export default function Products() {
 
     switch (sort) {
       case "price-asc":
-        // RELEASE DEFECT: sorts descending instead of ascending
         if (releaseMode) {
           result.sort((a, b) => b.price - a.price);
         } else {
@@ -106,7 +104,6 @@ export default function Products() {
     setPage(1);
   };
 
-  // Highlight search matches in text
   const highlightMatch = useCallback(
     (text: string) => {
       if (!search.trim()) return text;
@@ -127,13 +124,13 @@ export default function Products() {
   return (
     <Layout>
       <div className="container py-8">
-        <h1 className="text-3xl font-bold mb-6">Products</h1>
+        <h1 className="text-3xl font-bold mb-6">Produkter</h1>
 
         {/* Search */}
         <div className="mb-6">
           <div className="relative max-w-md">
             <label htmlFor="product-search" className="sr-only">
-              Search products
+              Sök produkter
             </label>
             <Search
               className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
@@ -142,7 +139,7 @@ export default function Products() {
             <input
               id="product-search"
               type="search"
-              placeholder="Search products…"
+              placeholder="Sök produkter…"
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -154,7 +151,7 @@ export default function Products() {
               <button
                 onClick={() => { setSearch(""); setPage(1); }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus-ring rounded-sm"
-                aria-label="Clear search"
+                aria-label="Rensa sökning"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -164,14 +161,12 @@ export default function Products() {
 
         {/* Filter & Sort row */}
         <div className="mb-4 flex flex-wrap items-start gap-6">
-          {/* Category filter */}
           <fieldset>
-            <legend className="text-sm font-medium mb-2">Category</legend>
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+            <legend className="text-sm font-medium mb-2">Kategori</legend>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrera efter kategori">
               {CATEGORIES.map((cat) => {
                 const isActive = selectedCategory === cat;
 
-                // RELEASE DEFECT: category buttons become divs without keyboard access
                 if (releaseMode) {
                   return (
                     <div
@@ -206,13 +201,11 @@ export default function Products() {
             </div>
           </fieldset>
 
-          {/* Sort */}
           <div>
             <label htmlFor="sort-select" className="text-sm font-medium mb-2 block">
-              Sort by
+              Sortera efter
             </label>
             {releaseMode ? (
-              // SAFE CHANGE: still a native select, just different styling wrapper
               <div className="inline-block">
                 <select
                   id="sort-select"
@@ -242,14 +235,14 @@ export default function Products() {
 
         {/* Active filter chips */}
         {hasActiveFilters && (
-          <div className="mb-4 flex flex-wrap items-center gap-2" aria-label="Active filters">
+          <div className="mb-4 flex flex-wrap items-center gap-2" aria-label="Aktiva filter">
             {search.trim() && (
               <span className="inline-flex items-center gap-1 rounded-full border bg-secondary/60 px-3 py-1 text-sm">
-                Search: "{search}"
+                Sök: "{search}"
                 <button
                   onClick={() => { setSearch(""); setPage(1); }}
                   className="ml-1 rounded-full hover:bg-muted p-0.5 focus-ring"
-                  aria-label={`Remove search filter: ${search}`}
+                  aria-label={`Ta bort sökfilter: ${search}`}
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
@@ -261,7 +254,7 @@ export default function Products() {
                 <button
                   onClick={() => handleCategoryClick("")}
                   className="ml-1 rounded-full hover:bg-muted p-0.5 focus-ring"
-                  aria-label={`Remove category filter: ${selectedCategory}`}
+                  aria-label={`Ta bort kategorifilter: ${selectedCategory}`}
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
@@ -269,11 +262,11 @@ export default function Products() {
             )}
             {sort !== "featured" && (
               <span className="inline-flex items-center gap-1 rounded-full border bg-secondary/60 px-3 py-1 text-sm">
-                Sort: {SORT_LABELS[sort]}
+                Sortering: {SORT_LABELS[sort]}
                 <button
                   onClick={() => { setSort("featured"); setPage(1); }}
                   className="ml-1 rounded-full hover:bg-muted p-0.5 focus-ring"
-                  aria-label={`Remove sort: ${SORT_LABELS[sort]}`}
+                  aria-label={`Ta bort sortering: ${SORT_LABELS[sort]}`}
                 >
                   <X className="h-3 w-3" aria-hidden="true" />
                 </button>
@@ -282,9 +275,9 @@ export default function Products() {
             <button
               onClick={clearAll}
               className="text-sm text-primary hover:text-primary/80 underline underline-offset-2 focus-ring rounded-sm"
-              aria-label="Clear all filters"
+              aria-label="Rensa alla filter"
             >
-              Clear all
+              Rensa alla
             </button>
           </div>
         )}
@@ -292,8 +285,8 @@ export default function Products() {
         {/* Results count */}
         <p className="mb-4 text-sm text-muted-foreground" aria-live="polite">
           {filtered.length === 0
-            ? "No products found"
-            : `Showing ${paginated.length} of ${filtered.length} products`}
+            ? "Inga produkter hittades"
+            : `Visar ${paginated.length} av ${filtered.length} produkter`}
         </p>
 
         {/* Product grid */}
@@ -316,20 +309,20 @@ export default function Products() {
                   variant="outline"
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Load More
+                  Ladda fler
                 </Button>
               </div>
             )}
           </>
         ) : (
           <div className="rounded-lg border bg-card p-12 text-center">
-            <p className="text-lg font-medium mb-2">No products found</p>
+            <p className="text-lg font-medium mb-2">Inga produkter hittades</p>
             <p className="text-sm text-muted-foreground mb-4">
-              Try adjusting your search or filter criteria.
+              Försök att justera din sökning eller filterkriterierna.
             </p>
             {search.trim() && (
               <div className="mb-4">
-                <p className="text-sm text-muted-foreground mb-2">Try searching for:</p>
+                <p className="text-sm text-muted-foreground mb-2">Prova att söka efter:</p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {SUGGESTIONS.map((term) => (
                     <button
@@ -344,13 +337,12 @@ export default function Products() {
               </div>
             )}
             <Button variant="outline" onClick={clearAll}>
-              Clear all filters
+              Rensa alla filter
             </Button>
           </div>
         )}
       </div>
 
-      {/* Quick View Modal */}
       {quickViewProduct && (
         <QuickViewModal
           product={quickViewProduct}

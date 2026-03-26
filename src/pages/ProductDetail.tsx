@@ -22,12 +22,12 @@ export default function ProductDetail() {
     return (
       <Layout>
         <div className="container py-16 text-center">
-          <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+          <h1 className="text-2xl font-bold mb-4">Produkten hittades inte</h1>
           <p className="text-muted-foreground mb-6">
-            The product you're looking for doesn't exist or has been removed.
+            Produkten du letar efter finns inte eller har tagits bort.
           </p>
           <Button asChild variant="outline">
-            <Link to="/products">Back to Products</Link>
+            <Link to="/products">Tillbaka till produkter</Link>
           </Button>
         </div>
       </Layout>
@@ -42,7 +42,7 @@ export default function ProductDetail() {
     if (!product.inStock) return;
     addToCart(product);
     if (!releaseMode) {
-      announce(`${product.name} added to cart`);
+      announce(`${product.name} tillagd i kundvagnen`);
     }
   };
 
@@ -50,22 +50,22 @@ export default function ProductDetail() {
     e.preventDefault();
     setReviewError("");
     if (reviewRating === 0) {
-      setReviewError("Please select a star rating.");
+      setReviewError("Välj ett stjärnbetyg.");
       return;
     }
     if (!reviewTitle.trim()) {
-      setReviewError("Please enter a review title.");
+      setReviewError("Ange en recensionstitel.");
       return;
     }
     if (!reviewBody.trim()) {
-      setReviewError("Please write your review.");
+      setReviewError("Skriv din recension.");
       return;
     }
     setReviewSubmitted(true);
-    announce("Review submitted successfully!");
+    announce("Recension skickad!");
   };
 
-  const buttonText = releaseMode ? "Add to Basket" : "Add to Cart";
+  const buttonText = releaseMode ? "Lägg i korgen" : "Lägg i kundvagn";
 
   const related = products
     .filter((p) => p.category === product.category && p.id !== product.id)
@@ -79,16 +79,14 @@ export default function ProductDetail() {
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6 focus-ring rounded-sm"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to Products
+          Tillbaka till produkter
         </Link>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          {/* Image */}
           <div className="rounded-lg border bg-secondary/30 product-image-placeholder text-7xl">
             <span aria-hidden="true">{product.icon}</span>
           </div>
 
-          {/* Details */}
           <div>
             <p className="text-sm font-medium text-muted-foreground mb-1">
               {product.category}
@@ -99,21 +97,20 @@ export default function ProductDetail() {
               <StarRatingDisplay rating={product.rating} size="md" />
               <span className="font-medium">{product.rating}</span>
               <span className="text-muted-foreground">
-                ({product.reviewCount} reviews)
+                ({product.reviewCount} recensioner)
               </span>
             </div>
 
             <p className="text-2xl font-bold mb-6 tabular-nums">
-              ${product.price.toFixed(2)}
+              {product.price.toFixed(0)} kr
             </p>
 
             <p className="text-muted-foreground mb-6 leading-relaxed">
               {product.longDescription}
             </p>
 
-            {/* Features */}
             <div className="mb-6">
-              <h2 className="text-sm font-semibold mb-3">Key Features</h2>
+              <h2 className="text-sm font-semibold mb-3">Viktiga egenskaper</h2>
               <ul className="grid gap-2 sm:grid-cols-2">
                 {product.features.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm">
@@ -131,7 +128,7 @@ export default function ProductDetail() {
                 disabled={!product.inStock}
                 aria-label={`${buttonText}, ${product.name}`}
               >
-                {product.inStock ? buttonText : "Out of Stock"}
+                {product.inStock ? buttonText : "Slut i lager"}
               </Button>
 
               <Button
@@ -140,14 +137,14 @@ export default function ProductDetail() {
                 onClick={() => {
                   toggleWishlist(product.id);
                   if (!releaseMode) {
-                    announce(wishlisted ? `${product.name} removed from wishlist` : `${product.name} added to wishlist`);
+                    announce(wishlisted ? `${product.name} borttagen från önskelistan` : `${product.name} tillagd i önskelistan`);
                   }
                 }}
-                aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+                aria-label={wishlisted ? `Ta bort ${product.name} från önskelistan` : `Lägg till ${product.name} i önskelistan`}
                 aria-pressed={wishlisted}
               >
                 <Heart className={`h-4 w-4 ${wishlisted ? "fill-destructive text-destructive" : ""}`} aria-hidden="true" />
-                {wishlisted ? "Wishlisted" : "Wishlist"}
+                {wishlisted ? "I önskelistan" : "Önskelista"}
               </Button>
 
               <Button
@@ -155,50 +152,49 @@ export default function ProductDetail() {
                 size="lg"
                 onClick={() => {
                   if (!compared && compareList.length >= 3) {
-                    announce("You can compare up to 3 products.");
+                    announce("Du kan jämföra upp till 3 produkter.");
                     return;
                   }
                   toggleCompare(product.id);
                   if (!releaseMode) {
-                    announce(compared ? `${product.name} removed from comparison` : `${product.name} added to comparison`);
+                    announce(compared ? `${product.name} borttagen från jämförelsen` : `${product.name} tillagd i jämförelsen`);
                   }
                 }}
-                aria-label={compared ? `Remove ${product.name} from comparison` : `Add ${product.name} to comparison`}
+                aria-label={compared ? `Ta bort ${product.name} från jämförelse` : `Lägg till ${product.name} i jämförelse`}
                 aria-pressed={compared}
               >
                 <ArrowLeftRight className="h-4 w-4" aria-hidden="true" />
-                {compared ? "Comparing" : "Compare"}
+                {compared ? "Jämförs" : "Jämför"}
               </Button>
 
               {!product.inStock && (
                 <p className="text-sm text-muted-foreground">
-                  This item is currently unavailable.
+                  Denna artikel är för närvarande inte tillgänglig.
                 </p>
               )}
             </div>
           </div>
         </div>
 
-        {/* Reviews Section */}
+        {/* Reviews */}
         <section className="mt-16" aria-labelledby="reviews-heading">
           <h2 id="reviews-heading" className="text-xl font-bold mb-6">
-            Customer Reviews ({existingReviews.length})
+            Kundrecensioner ({existingReviews.length})
           </h2>
 
-          {/* Review Form */}
           <div className="rounded-lg border bg-card p-6 mb-8">
-            <h3 className="font-semibold mb-4">Write a Review</h3>
+            <h3 className="font-semibold mb-4">Skriv en recension</h3>
             {reviewSubmitted ? (
               <div className="text-center py-4">
                 <p className="text-success font-medium" role="status">
-                  Thank you! Your review has been submitted.
+                  Tack! Din recension har skickats.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2" id="rating-label">
-                    Your Rating
+                    Ditt betyg
                   </label>
                   <StarRatingInput
                     value={reviewRating}
@@ -209,27 +205,27 @@ export default function ProductDetail() {
 
                 <div>
                   <label htmlFor="review-title" className="block text-sm font-medium mb-1">
-                    Review Title
+                    Recensionstitel
                   </label>
                   <input
                     id="review-title"
                     type="text"
                     value={reviewTitle}
                     onChange={(e) => setReviewTitle(e.target.value)}
-                    placeholder="Summarize your experience"
+                    placeholder="Sammanfatta din upplevelse"
                     className="h-10 w-full rounded-md border bg-card px-3 text-sm focus-ring"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="review-body" className="block text-sm font-medium mb-1">
-                    Your Review
+                    Din recension
                   </label>
                   <textarea
                     id="review-body"
                     value={reviewBody}
                     onChange={(e) => setReviewBody(e.target.value)}
-                    placeholder="What did you like or dislike?"
+                    placeholder="Vad gillade eller ogillade du?"
                     rows={4}
                     className="w-full rounded-md border bg-card px-3 py-2 text-sm focus-ring resize-y"
                   />
@@ -241,18 +237,17 @@ export default function ProductDetail() {
                   </p>
                 )}
 
-                <Button type="submit">Submit Review</Button>
+                <Button type="submit">Skicka recension</Button>
               </form>
             )}
           </div>
 
-          {/* Existing Reviews */}
           <div className="space-y-4">
             {existingReviews.map((review) => (
               <article
                 key={review.id}
                 className="rounded-lg border bg-card p-5"
-                aria-label={`Review by ${review.author}`}
+                aria-label={`Recension av ${review.author}`}
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div>
@@ -261,7 +256,7 @@ export default function ProductDetail() {
                       <span className="font-semibold text-sm">{review.title}</span>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      By {review.author} on {review.date}
+                      Av {review.author} den {review.date}
                     </p>
                   </div>
                 </div>
@@ -270,18 +265,17 @@ export default function ProductDetail() {
                 </p>
                 <div className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
                   <ThumbsUp className="h-3 w-3" aria-hidden="true" />
-                  {review.helpful} found this helpful
+                  {review.helpful} tyckte detta var hjälpsamt
                 </div>
               </article>
             ))}
           </div>
         </section>
 
-        {/* Related */}
         {related.length > 0 && (
           <section className="mt-16" aria-labelledby="related-heading">
             <h2 id="related-heading" className="text-xl font-bold mb-6">
-              You Might Also Like
+              Du kanske också gillar
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
@@ -298,7 +292,7 @@ export default function ProductDetail() {
                       {p.name}
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      ${p.price.toFixed(2)}
+                      {p.price.toFixed(0)} kr
                     </p>
                   </div>
                 </Link>

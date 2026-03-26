@@ -5,10 +5,10 @@ import type { Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "Brewing Equipment": "bg-primary/10 text-primary",
-  Grinders: "bg-accent/15 text-accent-foreground",
-  Accessories: "bg-secondary text-secondary-foreground",
-  "Coffee Beans": "bg-primary/5 text-primary",
+  "Bryggare": "bg-primary/10 text-primary",
+  Kvarnar: "bg-accent/15 text-accent-foreground",
+  "Tillbehör": "bg-secondary text-secondary-foreground",
+  "Kaffebönor": "bg-primary/5 text-primary",
 };
 
 interface ProductCardProps {
@@ -26,7 +26,7 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
     if (!product.inStock) return;
     addToCart(product);
     if (!releaseMode) {
-      announce(`${product.name} added to cart`);
+      announce(`${product.name} tillagd i kundvagnen`);
     }
   };
 
@@ -35,7 +35,7 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
     e.stopPropagation();
     toggleWishlist(product.id);
     if (!releaseMode) {
-      announce(wishlisted ? `${product.name} removed from wishlist` : `${product.name} added to wishlist`);
+      announce(wishlisted ? `${product.name} borttagen från önskelistan` : `${product.name} tillagd i önskelistan`);
     }
   };
 
@@ -43,12 +43,12 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
     e.preventDefault();
     e.stopPropagation();
     if (!compared && compareList.length >= 3) {
-      announce("You can compare up to 3 products. Remove one first.");
+      announce("Du kan jämföra upp till 3 produkter. Ta bort en först.");
       return;
     }
     toggleCompare(product.id);
     if (!releaseMode) {
-      announce(compared ? `${product.name} removed from comparison` : `${product.name} added to comparison`);
+      announce(compared ? `${product.name} borttagen från jämförelse` : `${product.name} tillagd i jämförelse`);
     }
   };
 
@@ -58,7 +58,7 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
     onQuickView?.();
   };
 
-  const buttonText = releaseMode ? "Add to Basket" : "Add to Cart";
+  const buttonText = releaseMode ? "Lägg i korgen" : "Lägg i kundvagn";
   const productName = highlightMatch ? highlightMatch(product.name) : product.name;
   const productDesc = highlightMatch ? highlightMatch(product.description) : product.description;
 
@@ -69,10 +69,8 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
       >
         <span className="text-5xl" aria-hidden="true">{product.icon}</span>
 
-        {/* Action buttons */}
         <div className="absolute top-2 right-2 flex gap-1">
           {releaseMode ? (
-            // RELEASE DEFECT: wishlist button loses accessible label in release mode
             <button
               onClick={handleWishlist}
               className={`h-8 w-8 inline-flex items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card ${
@@ -87,7 +85,7 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
               className={`h-8 w-8 inline-flex items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card focus-ring ${
                 wishlisted ? "text-destructive" : "text-muted-foreground"
               }`}
-              aria-label={wishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+              aria-label={wishlisted ? `Ta bort ${product.name} från önskelistan` : `Lägg till ${product.name} i önskelistan`}
               aria-pressed={wishlisted}
             >
               <Heart className={`h-4 w-4 ${wishlisted ? "fill-current" : ""}`} aria-hidden="true" />
@@ -98,23 +96,22 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
             className={`h-8 w-8 inline-flex items-center justify-center rounded-full bg-card/90 backdrop-blur-sm transition-colors hover:bg-card focus-ring ${
               compared ? "text-primary" : "text-muted-foreground"
             }`}
-            aria-label={compared ? `Remove ${product.name} from comparison` : `Add ${product.name} to comparison`}
+            aria-label={compared ? `Ta bort ${product.name} från jämförelse` : `Lägg till ${product.name} i jämförelse`}
             aria-pressed={compared}
           >
             <ArrowLeftRight className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
 
-        {/* Quick View button */}
         {onQuickView && (
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={handleQuickView}
               className="inline-flex items-center gap-1.5 rounded-full bg-card/95 backdrop-blur-sm px-3 py-1.5 text-xs font-medium shadow-sm hover:bg-card transition-colors focus-ring"
-              aria-label={`Quick view ${product.name}`}
+              aria-label={`Snabbvy ${product.name}`}
             >
               <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-              Quick View
+              Snabbvy
             </button>
           </div>
         )}
@@ -150,7 +147,7 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
 
         <div className="flex items-center justify-between gap-2">
           <span className="text-lg font-bold tabular-nums">
-            ${product.price.toFixed(2)}
+            {product.price.toFixed(0)} kr
           </span>
           <Button
             size="sm"
@@ -161,7 +158,7 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
             disabled={!product.inStock}
             aria-label={`${buttonText}, ${product.name}`}
           >
-            {product.inStock ? buttonText : "Out of Stock"}
+            {product.inStock ? buttonText : "Slut i lager"}
           </Button>
         </div>
       </div>
