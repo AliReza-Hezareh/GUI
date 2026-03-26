@@ -236,10 +236,12 @@ export default function Checkout() {
             tabIndex={-1}
             className="text-2xl font-bold mb-3 outline-none"
           >
-            {releaseMode
-              ? "Order Received"
-              : "Order Confirmed!"}
+            {releaseMode ? "Order Received" : "Order Confirmed!"}
           </h1>
+          <div className="rounded-lg border bg-card p-4 mb-6 inline-block">
+            <p className="text-sm text-muted-foreground mb-1">Order ID</p>
+            <p className="text-xl font-mono font-bold tracking-wide">#{placedOrderId}</p>
+          </div>
           <p className="text-muted-foreground mb-6">
             {releaseMode
               ? "Your order is under review and may take 3–5 business days to process. We'll reach out if there are any issues."
