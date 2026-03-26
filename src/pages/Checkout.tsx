@@ -63,6 +63,10 @@ export default function Checkout() {
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
   const [couponError, setCouponError] = useState("");
 
+  const [payment, setPayment] = useState<PaymentData>(INITIAL_PAYMENT);
+  const [paymentErrors, setPaymentErrors] = useState<FormErrors>({});
+  const [placedOrderId, setPlacedOrderId] = useState<string>("");
+
   const discount = appliedCoupon && COUPONS[appliedCoupon]
     ? COUPONS[appliedCoupon].type === "percent"
       ? cartTotal * (COUPONS[appliedCoupon].value / 100)
