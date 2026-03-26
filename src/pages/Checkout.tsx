@@ -461,9 +461,114 @@ export default function Checkout() {
                 </div>
               </fieldset>
 
+              {/* Mock Payment Form */}
+              <fieldset className="mt-8">
+                <legend className="text-lg font-semibold mb-2 flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" aria-hidden="true" />
+                  Payment Information
+                </legend>
+                <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-4 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Lock className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span><strong>DEMO ONLY</strong> — This is a simulated payment form. No real transactions are processed and no card data is stored or transmitted.</span>
+                  </div>
+                </div>
+
+                <div className="grid gap-4">
+                  <div>
+                    <label htmlFor="checkout-cardname" className="block text-sm font-medium mb-1">
+                      Name on Card {reqIndicator}
+                    </label>
+                    <input
+                      id="checkout-cardname"
+                      type="text"
+                      value={payment.cardName}
+                      onChange={(e) => handlePaymentChange("cardName", e.target.value)}
+                      className={`h-10 w-full rounded-md border px-3 text-sm focus-ring ${paymentErrors.cardName ? "border-destructive" : "bg-card"}`}
+                      aria-required="true"
+                      aria-invalid={!!paymentErrors.cardName}
+                      aria-describedby={paymentErrors.cardName ? "cardname-error" : undefined}
+                      autoComplete="cc-name"
+                      placeholder="John Doe"
+                    />
+                    {paymentErrors.cardName && (
+                      <p id="cardname-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.cardName}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label htmlFor="checkout-cardnumber" className="block text-sm font-medium mb-1">
+                      Card Number {reqIndicator}
+                    </label>
+                    <input
+                      id="checkout-cardnumber"
+                      type="text"
+                      inputMode="numeric"
+                      value={payment.cardNumber}
+                      onChange={(e) => handlePaymentChange("cardNumber", e.target.value)}
+                      className={`h-10 w-full rounded-md border px-3 text-sm focus-ring font-mono ${paymentErrors.cardNumber ? "border-destructive" : "bg-card"}`}
+                      aria-required="true"
+                      aria-invalid={!!paymentErrors.cardNumber}
+                      aria-describedby={paymentErrors.cardNumber ? "cardnumber-error" : undefined}
+                      autoComplete="cc-number"
+                      placeholder="4242 4242 4242 4242"
+                    />
+                    {paymentErrors.cardNumber && (
+                      <p id="cardnumber-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.cardNumber}</p>
+                    )}
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="checkout-expiry" className="block text-sm font-medium mb-1">
+                        Expiry Date {reqIndicator}
+                      </label>
+                      <input
+                        id="checkout-expiry"
+                        type="text"
+                        inputMode="numeric"
+                        value={payment.expiry}
+                        onChange={(e) => handlePaymentChange("expiry", e.target.value)}
+                        className={`h-10 w-full rounded-md border px-3 text-sm focus-ring font-mono ${paymentErrors.expiry ? "border-destructive" : "bg-card"}`}
+                        aria-required="true"
+                        aria-invalid={!!paymentErrors.expiry}
+                        aria-describedby={paymentErrors.expiry ? "expiry-error" : undefined}
+                        autoComplete="cc-exp"
+                        placeholder="MM/YY"
+                      />
+                      {paymentErrors.expiry && (
+                        <p id="expiry-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.expiry}</p>
+                      )}
+                    </div>
+                    <div>
+                      <label htmlFor="checkout-cvv" className="block text-sm font-medium mb-1">
+                        CVV {reqIndicator}
+                      </label>
+                      <input
+                        id="checkout-cvv"
+                        type="text"
+                        inputMode="numeric"
+                        value={payment.cvv}
+                        onChange={(e) => handlePaymentChange("cvv", e.target.value)}
+                        className={`h-10 w-full rounded-md border px-3 text-sm focus-ring font-mono ${paymentErrors.cvv ? "border-destructive" : "bg-card"}`}
+                        aria-required="true"
+                        aria-invalid={!!paymentErrors.cvv}
+                        aria-describedby={paymentErrors.cvv ? "cvv-error" : undefined}
+                        autoComplete="cc-csc"
+                        placeholder="123"
+                      />
+                      {paymentErrors.cvv && (
+                        <p id="cvv-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.cvv}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
               <div className="mt-8">
                 <Button type="submit" size="lg" className="w-full sm:w-auto">
-                  Place Order
+                  <Lock className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Place Order (Demo)
                 </Button>
               </div>
             </form>
