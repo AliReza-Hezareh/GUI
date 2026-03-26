@@ -45,8 +45,8 @@ const INITIAL_FORM: FormData = {
 
 // Valid coupon codes
 const COUPONS: Record<string, { type: "percent" | "fixed"; value: number; label: string }> = {
-  BREW10: { type: "percent", value: 10, label: "10% off" },
-  COFFEE20: { type: "fixed", value: 20, label: "$20 off" },
+  BREW10: { type: "percent", value: 10, label: "10% rabatt" },
+  COFFEE20: { type: "fixed", value: 200, label: "200 kr rabatt" },
 };
 
 let orderIdCounter = 1000;
