@@ -20,27 +20,27 @@ export default function Account() {
       updateProfile({ displayName: displayName.trim() });
     }
     setSaved(true);
-    announce("Preferences saved.");
+    announce("Inställningar sparade.");
     setTimeout(() => setSaved(false), 3000);
   };
 
   return (
     <Layout>
       <div className="container py-8 max-w-xl">
-        <h1 className="text-3xl font-bold mb-6">Account Preferences</h1>
+        <h1 className="text-3xl font-bold mb-6">Kontoinställningar</h1>
 
         {!isLoggedIn && (
           <div className="rounded-lg border bg-card p-6 mb-6 text-center">
             <User className="mx-auto h-10 w-10 text-muted-foreground/40 mb-3" aria-hidden="true" />
             <p className="text-sm text-muted-foreground mb-3">
-              Log in to save your preferences to your account.
+              Logga in för att spara dina inställningar till ditt konto.
             </p>
             <div className="flex justify-center gap-3">
               <Button asChild variant="outline" size="sm">
-                <Link to="/login">Log In</Link>
+                <Link to="/login">Logga in</Link>
               </Button>
               <Button asChild size="sm">
-                <Link to="/signup">Sign Up</Link>
+                <Link to="/signup">Skapa konto</Link>
               </Button>
             </div>
           </div>
@@ -62,14 +62,14 @@ export default function Account() {
           {isLoggedIn && (
             <div>
               <label htmlFor="pref-name" className="block text-sm font-medium mb-1">
-                Display Name
+                Visningsnamn
               </label>
               <input
                 id="pref-name"
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Enter your name"
+                placeholder="Ange ditt namn"
                 className="h-10 w-full rounded-md border bg-background px-3 text-sm focus-ring"
                 autoComplete="name"
               />
@@ -78,9 +78,9 @@ export default function Account() {
 
           <div className="flex items-center justify-between rounded-md border bg-card p-4">
             <div>
-              <p className="text-sm font-medium">Email Notifications</p>
+              <p className="text-sm font-medium">E-postnotiser</p>
               <p className="text-xs text-muted-foreground">
-                Receive updates about orders and new products.
+                Ta emot uppdateringar om beställningar och nya produkter.
               </p>
             </div>
             <label className="relative inline-flex cursor-pointer">
@@ -90,7 +90,7 @@ export default function Account() {
                 onChange={(e) => setForm((p) => ({ ...p, emailNotifications: e.target.checked }))}
                 className="peer sr-only"
                 role="switch"
-                aria-label="Email notifications"
+                aria-label="E-postnotiser"
               />
               <div className="h-6 w-11 rounded-full bg-muted peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-transform after:duration-200 peer-checked:after:translate-x-5" />
             </label>
@@ -98,7 +98,7 @@ export default function Account() {
 
           <div>
             <label htmlFor="pref-per-page" className="block text-sm font-medium mb-1">
-              Products Per Page
+              Produkter per sida
             </label>
             <select
               id="pref-per-page"
@@ -114,10 +114,10 @@ export default function Account() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button type="submit">Save Preferences</Button>
+            <Button type="submit">Spara inställningar</Button>
             {saved && (
               <span className="text-sm text-success font-medium" role="status">
-                Saved!
+                Sparat!
               </span>
             )}
           </div>

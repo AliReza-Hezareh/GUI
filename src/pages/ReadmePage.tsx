@@ -4,67 +4,67 @@ export default function ReadmePage() {
   return (
     <Layout>
       <div className="container py-8 max-w-3xl prose prose-slate">
-        <h1>Brewscape — Training App Guide</h1>
+        <h1>Brewscape — Guide för övningsappen</h1>
 
         <p>
-          Brewscape is a realistic coffee equipment e-commerce app built for teaching
-          usability testing, accessibility auditing, and Playwright test automation.
+          Brewscape är en realistisk e-handelsapp för kaffeutrustning, byggd för att lära ut
+          användbarhetstestning, tillgänglighetsrevision och Playwright-testautomatisering.
         </p>
 
-        <h2>Main User Journeys</h2>
+        <h2>Huvudsakliga användarflöden</h2>
         <ol>
-          <li><strong>Browse & Search:</strong> Visit Products → use search, filter by category, sort by price/rating → click into product details.</li>
-          <li><strong>Add to Cart & Checkout:</strong> Add items to cart → go to Checkout → fill shipping form → place order → see confirmation.</li>
-          <li><strong>Contact:</strong> Visit Contact page → submit inquiry form → see success message.</li>
-          <li><strong>Preferences:</strong> Visit Account → change display name, notification setting, items per page → save (persisted to localStorage).</li>
+          <li><strong>Bläddra & Sök:</strong> Besök Produkter → använd sök, filtrera efter kategori, sortera efter pris/betyg → klicka in på produktdetaljer.</li>
+          <li><strong>Lägg i kundvagn & Kassa:</strong> Lägg artiklar i kundvagnen → gå till Kassan → fyll i leveransinformation → lägg beställning → se bekräftelse.</li>
+          <li><strong>Kontakt:</strong> Besök Kontakt-sidan → skicka förfrågan → se bekräftelsemeddelande.</li>
+          <li><strong>Inställningar:</strong> Besök Konto → ändra visningsnamn, notisval, artiklar per sida → spara (lagras i localStorage).</li>
         </ol>
 
-        <h2>Usability Review Targets</h2>
+        <h2>Mål för användbarhetsrecension</h2>
         <ul>
-          <li>Form validation and error messaging (Checkout, Contact)</li>
-          <li>Search and filter discoverability (Products page)</li>
-          <li>Cart management (quantity controls, remove items)</li>
-          <li>Confirmation messaging clarity</li>
-          <li>Empty state messaging</li>
-          <li>Mobile navigation and responsive layout</li>
+          <li>Formulärvalidering och felmeddelanden (Kassa, Kontakt)</li>
+          <li>Sök- och filterupptäckbarhet (Produktsida)</li>
+          <li>Kundvagnshantering (antal-kontroller, ta bort artiklar)</li>
+          <li>Tydlighet i bekräftelsemeddelanden</li>
+          <li>Tomt-tillståndsmeddelanden</li>
+          <li>Mobilnavigering och responsiv layout</li>
         </ul>
 
-        <h2>Accessibility Review Targets</h2>
+        <h2>Mål för tillgänglighetsrecension</h2>
         <ul>
-          <li>Skip link and landmark structure</li>
-          <li>Heading hierarchy across all pages</li>
-          <li>Form label associations and aria-describedby on errors</li>
-          <li>Keyboard navigation: nav links, filters, cart controls, forms</li>
-          <li>Focus management after checkout submission</li>
-          <li>Color contrast of interactive elements and text</li>
-          <li>Screen reader announcements for cart additions and form errors</li>
-          <li>ARIA attributes: aria-expanded, aria-pressed, aria-live, aria-invalid</li>
+          <li>Skip-länk och landmärkesstruktur</li>
+          <li>Rubrikhierarki på alla sidor</li>
+          <li>Formuläretikett-kopplingar och aria-describedby på fel</li>
+          <li>Tangentbordsnavigering: navlänkar, filter, kundvagnskontroller, formulär</li>
+          <li>Fokushantering efter kassabeställning</li>
+          <li>Färgkontrast för interaktiva element och text</li>
+          <li>Skärmläsar-meddelanden för kundvagnstillägg och formulärfel</li>
+          <li>ARIA-attribut: aria-expanded, aria-pressed, aria-live, aria-invalid</li>
         </ul>
 
-        <h2>Playwright Test Targets</h2>
+        <h2>Mål för Playwright-tester</h2>
         <ul>
-          <li><strong>Navigation:</strong> Verify all routes render correct headings and content.</li>
-          <li><strong>Search:</strong> Type a query → verify filtered results. Clear → verify reset.</li>
-          <li><strong>Category Filter:</strong> Click a category → verify only matching products shown.</li>
-          <li><strong>Sort:</strong> Select "Price: Low to High" → verify first product is cheapest.</li>
-          <li><strong>Add to Cart:</strong> Click add → verify cart count updates → verify aria announcement.</li>
-          <li><strong>Checkout Form:</strong> Submit empty → verify all errors. Fill valid data → submit → verify confirmation.</li>
-          <li><strong>Preferences:</strong> Change a setting → reload → verify it persists.</li>
-          <li><strong>Load More:</strong> Verify pagination loads additional products.</li>
+          <li><strong>Navigering:</strong> Verifiera att alla routes renderar korrekta rubriker och innehåll.</li>
+          <li><strong>Sök:</strong> Skriv en fråga → verifiera filtrerade resultat. Rensa → verifiera återställning.</li>
+          <li><strong>Kategorifilter:</strong> Klicka en kategori → verifiera att bara matchande produkter visas.</li>
+          <li><strong>Sortering:</strong> Välj "Pris: Lägst först" → verifiera att billigaste produkten visas först.</li>
+          <li><strong>Lägg i kundvagn:</strong> Klicka lägg till → verifiera att kundvagnsräknaren uppdateras → verifiera aria-meddelande.</li>
+          <li><strong>Kassaformulär:</strong> Skicka tomt → verifiera alla fel. Fyll i giltig data → skicka → verifiera bekräftelse.</li>
+          <li><strong>Inställningar:</strong> Ändra en inställning → ladda om → verifiera att den sparats.</li>
+          <li><strong>Ladda fler:</strong> Verifiera att paginering laddar ytterligare produkter.</li>
         </ul>
 
-        <h2>Release Mode</h2>
+        <h2>Releaseläge</h2>
         <p>
-          Toggle "Simulate New Release" in the <a href="/teacher">Teacher Panel</a> to
-          activate a mix of harmless UI changes and real regressions. This lets students
-          practice writing resilient tests that survive refactors but catch genuine bugs.
+          Aktivera "Simulera ny release" i <a href="/teacher">Lärarpanelen</a> för att
+          aktivera en blandning av ofarliga UI-ändringar och riktiga regressioner. Detta låter studenter
+          öva på att skriva motståndskraftiga tester som klarar omstruktureringar men fångar riktiga buggar.
         </p>
 
-        <h2>How to Reset</h2>
+        <h2>Så här återställer du</h2>
         <p>
-          Visit the <a href="/teacher">Teacher Panel</a> and click "Reset All App State"
-          to clear cart, preferences, and return to baseline mode. This ensures repeatable
-          test runs.
+          Besök <a href="/teacher">Lärarpanelen</a> och klicka "Återställ allt" för att
+          rensa kundvagn, inställningar och återgå till basläge. Detta säkerställer repeterbara
+          testkörningar.
         </p>
       </div>
     </Layout>

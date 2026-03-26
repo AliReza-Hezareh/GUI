@@ -6,23 +6,23 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
 
 const DEFECTS_CHECKLIST = [
-  "Email field label loses htmlFor association on checkout",
-  "Category filter buttons become non-keyboard-accessible divs",
-  "Price: Low to High sort actually sorts high-to-low",
-  "Post-checkout confirmation heading does not receive focus",
-  "Phone validation rejects valid 10-digit numbers (requires 11)",
-  "Required field indicators (*) become very low contrast",
-  "Success message becomes ambiguous ('under review' instead of confirmed)",
-  "Cart add-to-cart announcement is not fired (screen reader silent)",
-  "Wishlist heart button on product cards loses accessible name",
-  "Star rating input for reviews becomes non-keyboard-accessible",
-  "Order history status labels are swapped (confirmed ↔ processing)",
-  "Compare table header cells lose scope attribute",
-  "Quick-view modal does not move focus into dialog on open",
-  "Checkout coupon discount is applied but total still shows pre-discount price",
-  "Clear-all-filters button in empty state loses its visible label (icon-only, no aria-label)",
-  "Login password field type changes from 'password' to 'text' (security regression)",
-  "Signup password confirmation mismatch check is skipped",
+  "E-postfältets etikett tappar htmlFor-koppling i kassan",
+  "Kategorifilterknappar blir icke-tangentbordsåtkomliga divs",
+  "Pris: Lägst först sorterar faktiskt högst-till-lägst",
+  "Bekräftelserubrik efter kassan får inte fokus",
+  "Telefonvalidering avvisar giltiga 10-siffriga nummer (kräver 11)",
+  "Obligatoriska fältindikatorer (*) får mycket låg kontrast",
+  "Framgångsmeddelande blir tvetydigt ('under granskning' istället för bekräftat)",
+  "Kundvagnens lägg-till-meddelande skickas inte (skärmläsaren tyst)",
+  "Önskelistehjärtknappen på produktkort tappar tillgängligt namn",
+  "Stjärnbetygsinmatning för recensioner blir icke-tangentbordsåtkomlig",
+  "Orderhistorikens statusetiketter är ombyttta (bekräftad ↔ behandlas)",
+  "Jämförelsetabellens rubrikceller tappar scope-attribut",
+  "Snabbvy-modalen flyttar inte fokus in i dialogen vid öppning",
+  "Kassans kupongrabatt appliceras men totalen visar fortfarande pris utan rabatt",
+  "Rensa-alla-filter-knapp i tomt tillstånd tappar sin synliga etikett",
+  "Inloggningens lösenordsfält ändrar typ från 'password' till 'text'",
+  "Registreringens lösenordsbekräftelsekontroll hoppas över",
 ];
 
 export default function TeacherPanelPage() {
@@ -33,26 +33,24 @@ export default function TeacherPanelPage() {
   return (
     <Layout>
       <div className="container py-8 max-w-xl">
-        <h1 className="text-2xl font-bold mb-2">Teacher Panel</h1>
+        <h1 className="text-2xl font-bold mb-2">Lärarpanel</h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Instructor controls for managing training scenarios. This page is not visible to students by default.
+          Instruktörskontroller för hantering av övningsscenarier. Denna sida är inte synlig för studenter som standard.
         </p>
 
         <div className="space-y-6">
-          {/* Version label */}
           <div className="rounded-lg border bg-card p-4">
-            <p className="text-sm text-muted-foreground">Current version</p>
+            <p className="text-sm text-muted-foreground">Aktuell version</p>
             <p className="text-lg font-bold">
-              {releaseMode ? "🟡 New Release" : "🟢 Stable Release"}
+              {releaseMode ? "🟡 Ny release" : "🟢 Stabil release"}
             </p>
           </div>
 
-          {/* Release toggle */}
           <div className="rounded-lg border bg-card p-4 flex items-center justify-between">
             <div>
-              <p className="font-medium">Simulate New Release</p>
+              <p className="font-medium">Simulera ny release</p>
               <p className="text-sm text-muted-foreground">
-                Introduces safe UI changes and real defects for testing exercises.
+                Introducerar säkra UI-ändringar och riktiga defekter för testövningar.
               </p>
             </div>
             <label className="relative inline-flex cursor-pointer">
@@ -62,13 +60,12 @@ export default function TeacherPanelPage() {
                 onChange={(e) => setReleaseMode(e.target.checked)}
                 className="peer sr-only"
                 role="switch"
-                aria-label="Simulate new release"
+                aria-label="Simulera ny release"
               />
               <div className="h-6 w-11 rounded-full bg-muted peer-checked:bg-accent peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-transform after:duration-200 peer-checked:after:translate-x-5" />
             </label>
           </div>
 
-          {/* Reset */}
           <Button
             variant="outline"
             onClick={() => {
@@ -79,17 +76,16 @@ export default function TeacherPanelPage() {
             className="w-full"
           >
             <RotateCcw className="h-4 w-4 mr-2" aria-hidden="true" />
-            Reset All App State
+            Återställ allt
           </Button>
 
-          {/* Defects checklist (instructor only) */}
           <div className="rounded-lg border bg-card">
             <button
               onClick={() => setShowChecklist(!showChecklist)}
               className="w-full flex items-center justify-between p-4 text-left font-medium focus-ring rounded-lg"
               aria-expanded={showChecklist}
             >
-              <span>Instructor Defect Checklist ({DEFECTS_CHECKLIST.length} defects)</span>
+              <span>Instruktörens defektlista ({DEFECTS_CHECKLIST.length} defekter)</span>
               {showChecklist ? (
                 <ChevronUp className="h-4 w-4" aria-hidden="true" />
               ) : (
@@ -99,7 +95,7 @@ export default function TeacherPanelPage() {
             {showChecklist && (
               <div className="border-t px-4 pb-4">
                 <p className="text-xs text-muted-foreground mt-3 mb-3">
-                  These defects are active when "Simulate New Release" is ON:
+                  Dessa defekter är aktiva när "Simulera ny release" är PÅ:
                 </p>
                 <ol className="list-decimal list-inside space-y-2 text-sm">
                   {DEFECTS_CHECKLIST.map((defect, i) => (

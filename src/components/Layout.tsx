@@ -6,10 +6,10 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/products", label: "Products" },
-  { to: "/contact", label: "Contact" },
-  { to: "/account", label: "Account" },
+  { to: "/", label: "Hem" },
+  { to: "/products", label: "Produkter" },
+  { to: "/contact", label: "Kontakt" },
+  { to: "/account", label: "Konto" },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -34,53 +34,53 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {
           title: "Support",
           links: [
-            { label: "Help Center", to: "/contact" },
-            { label: "Returns", to: "/reclamation" },
-            { label: "Shipping Info", to: "/contact" },
+            { label: "Hjälpcenter", to: "/contact" },
+            { label: "Returer", to: "/reclamation" },
+            { label: "Fraktinfo", to: "/contact" },
           ],
         },
         {
-          title: "Shop",
+          title: "Butik",
           links: [
-            { label: "Brewing Equipment", to: "/products?category=Brewing%20Equipment" },
-            { label: "Grinders", to: "/products?category=Grinders" },
-            { label: "Accessories", to: "/products?category=Accessories" },
-            { label: "Coffee Beans", to: "/products?category=Coffee%20Beans" },
+            { label: "Bryggare", to: "/products?category=Bryggare" },
+            { label: "Kvarnar", to: "/products?category=Kvarnar" },
+            { label: "Tillbehör", to: "/products?category=Tillbeh%C3%B6r" },
+            { label: "Kaffebönor", to: "/products?category=Kaffeb%C3%B6nor" },
           ],
         },
         {
-          title: "Company",
+          title: "Företag",
           links: [
-            { label: "About", to: "/contact" },
-            { label: "Blog", to: "/contact" },
-            { label: "Careers", to: "/contact" },
+            { label: "Om oss", to: "/contact" },
+            { label: "Blogg", to: "/contact" },
+            { label: "Karriär", to: "/contact" },
           ],
         },
       ]
     : [
         {
-          title: "Shop",
+          title: "Butik",
           links: [
-            { label: "Brewing Equipment", to: "/products?category=Brewing%20Equipment" },
-            { label: "Grinders", to: "/products?category=Grinders" },
-            { label: "Accessories", to: "/products?category=Accessories" },
-            { label: "Coffee Beans", to: "/products?category=Coffee%20Beans" },
+            { label: "Bryggare", to: "/products?category=Bryggare" },
+            { label: "Kvarnar", to: "/products?category=Kvarnar" },
+            { label: "Tillbehör", to: "/products?category=Tillbeh%C3%B6r" },
+            { label: "Kaffebönor", to: "/products?category=Kaffeb%C3%B6nor" },
           ],
         },
         {
-          title: "Company",
+          title: "Företag",
           links: [
-            { label: "About", to: "/contact" },
-            { label: "Blog", to: "/contact" },
-            { label: "Careers", to: "/contact" },
+            { label: "Om oss", to: "/contact" },
+            { label: "Blogg", to: "/contact" },
+            { label: "Karriär", to: "/contact" },
           ],
         },
         {
           title: "Support",
           links: [
-            { label: "Help Center", to: "/contact" },
-            { label: "Returns", to: "/reclamation" },
-            { label: "Shipping Info", to: "/contact" },
+            { label: "Hjälpcenter", to: "/contact" },
+            { label: "Returer", to: "/reclamation" },
+            { label: "Fraktinfo", to: "/contact" },
           ],
         },
       ];
@@ -88,7 +88,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <a href="#main-content" className="skip-link">
-        Skip to main content
+        Hoppa till huvudinnehåll
       </a>
 
       <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -96,13 +96,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link
             to="/"
             className="flex items-center gap-2 text-lg font-bold text-primary focus-ring rounded-sm"
-            aria-label="Brewscape home"
+            aria-label="Brewscape hem"
           >
             <Coffee className="h-6 w-6" aria-hidden="true" />
             <span>Brewscape</span>
           </Link>
 
-          <nav aria-label="Main navigation" className="hidden md:block">
+          <nav aria-label="Huvudnavigering" className="hidden md:block">
             <ul className="flex items-center gap-1">
               {NAV_LINKS.map((link) => (
                 <li key={link.to}>
@@ -128,7 +128,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Link
                   to="/account"
                   className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors focus-ring"
-                  aria-label={`Account: ${user?.displayName || user?.email}`}
+                  aria-label={`Konto: ${user?.displayName || user?.email}`}
                 >
                   <User className="h-4 w-4" aria-hidden="true" />
                   <span className="max-w-[120px] truncate">{user?.displayName || user?.email}</span>
@@ -136,7 +136,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <button
                   onClick={logout}
                   className="inline-flex items-center rounded-md p-2 text-muted-foreground hover:bg-secondary transition-colors focus-ring"
-                  aria-label="Log out"
+                  aria-label="Logga ut"
                 >
                   <LogOut className="h-4 w-4" aria-hidden="true" />
                 </button>
@@ -147,7 +147,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 className="hidden md:inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors focus-ring"
               >
                 <User className="h-4 w-4" aria-hidden="true" />
-                Log In
+                Logga in
               </Link>
             )}
 
@@ -155,7 +155,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link
               to="/wishlist"
               className="relative inline-flex items-center rounded-md p-2 text-foreground hover:bg-secondary transition-colors focus-ring"
-              aria-label={`Wishlist, ${wishlist.length} ${wishlist.length === 1 ? "item" : "items"}`}
+              aria-label={`Önskelista, ${wishlist.length} ${wishlist.length === 1 ? "artikel" : "artiklar"}`}
             >
               <Heart className="h-5 w-5" aria-hidden="true" />
               {wishlist.length > 0 && (
@@ -170,7 +170,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 to="/compare"
                 className="relative inline-flex items-center rounded-md p-2 text-foreground hover:bg-secondary transition-colors focus-ring"
-                aria-label={`Compare ${compareList.length} products`}
+                aria-label={`Jämför ${compareList.length} produkter`}
               >
                 <ArrowLeftRight className="h-5 w-5" aria-hidden="true" />
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground">
@@ -183,7 +183,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <Link
               to="/checkout"
               className="relative inline-flex items-center rounded-md p-2 text-foreground hover:bg-secondary transition-colors focus-ring"
-              aria-label={`Shopping cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}
+              aria-label={`Kundvagn, ${cartCount} ${cartCount === 1 ? "artikel" : "artiklar"}`}
             >
               <ShoppingCart className="h-5 w-5" aria-hidden="true" />
               {cartCount > 0 && (
@@ -199,7 +199,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-menu"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileMenuOpen ? "Stäng meny" : "Öppna meny"}
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -213,7 +213,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {mobileMenuOpen && (
           <nav
             id="mobile-menu"
-            aria-label="Mobile navigation"
+            aria-label="Mobilnavigering"
             className="border-t md:hidden"
           >
             <ul className="container flex flex-col gap-1 py-3">
@@ -236,7 +236,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to="/wishlist"
                   className="block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
                 >
-                  Wishlist
+                  Önskelista
                 </Link>
               </li>
               <li>
@@ -244,14 +244,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to="/orders"
                   className="block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
                 >
-                  Order History
+                  Orderhistorik
                 </Link>
               </li>
               {isLoggedIn ? (
                 <>
                   <li className="border-t mt-1 pt-2">
                     <span className="block px-3 py-1 text-xs text-muted-foreground">
-                      Signed in as {user?.displayName || user?.email}
+                      Inloggad som {user?.displayName || user?.email}
                     </span>
                   </li>
                   <li>
@@ -259,7 +259,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       onClick={logout}
                       className="block w-full text-left rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
                     >
-                      Log Out
+                      Logga ut
                     </button>
                   </li>
                 </>
@@ -270,7 +270,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       to="/login"
                       className="block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
                     >
-                      Log In
+                      Logga in
                     </Link>
                   </li>
                   <li>
@@ -278,7 +278,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       to="/signup"
                       className="block rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary focus-ring text-muted-foreground"
                     >
-                      Sign Up
+                      Skapa konto
                     </Link>
                   </li>
                 </>
@@ -301,7 +301,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Brewscape
               </Link>
               <p className="text-sm text-muted-foreground">
-                Premium coffee equipment for discerning brewers.
+                Premiumkaffeutrustning för kräsna bryggare.
               </p>
             </div>
             {footerSections.map((section) => (
@@ -320,7 +320,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             ))}
           </div>
           <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
-            <p>© 2026 Brewscape. Training application — not a real store.</p>
+            <p>© 2026 Brewscape. Övningsapplikation — inte en riktig butik.</p>
           </div>
         </div>
       </footer>

@@ -24,20 +24,20 @@ export default function Login() {
     setError("");
 
     if (!email.trim()) {
-      setError("Please enter your email.");
+      setError("Ange din e-postadress.");
       return;
     }
     if (!password) {
-      setError("Please enter your password.");
+      setError("Ange ditt lösenord.");
       return;
     }
 
     const result = login(email, password);
     if (result.success) {
-      announce("Logged in successfully.");
+      announce("Inloggad.");
       navigate("/account");
     } else {
-      setError(result.error || "Login failed.");
+      setError(result.error || "Inloggningen misslyckades.");
     }
   };
 
@@ -47,20 +47,20 @@ export default function Login() {
         <div className="rounded-lg border bg-card p-8">
           <div className="flex items-center gap-3 mb-6">
             <LogIn className="h-6 w-6 text-primary" aria-hidden="true" />
-            <h1 className="text-2xl font-bold">Log In</h1>
+            <h1 className="text-2xl font-bold">Logga in</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
               <label htmlFor="login-email" className="block text-sm font-medium mb-1">
-                Email
+                E-post
               </label>
               <input
                 id="login-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="du@exempel.se"
                 className="h-10 w-full rounded-md border bg-background px-3 text-sm focus-ring"
                 autoComplete="email"
               />
@@ -71,9 +71,8 @@ export default function Login() {
                 htmlFor={releaseMode ? undefined : "login-password"}
                 className="block text-sm font-medium mb-1"
               >
-                Password
+                Lösenord
               </label>
-              {/* RELEASE DEFECT: password field type becomes "text", exposing password */}
               <input
                 id="login-password"
                 type={releaseMode ? "text" : "password"}
@@ -95,14 +94,14 @@ export default function Login() {
             )}
 
             <Button type="submit" className="w-full">
-              Log In
+              Logga in
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Har du inget konto?{" "}
             <Link to="/signup" className="font-medium text-primary hover:underline focus-ring rounded-sm">
-              Sign up
+              Skapa konto
             </Link>
           </p>
         </div>
