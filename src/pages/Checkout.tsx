@@ -116,6 +116,19 @@ export default function Checkout() {
     return errs;
   };
 
+  const validatePayment = (): FormErrors => {
+    const errs: FormErrors = {};
+    if (!payment.cardName.trim()) errs.cardName = "Name on card is required.";
+    const digits = payment.cardNumber.replace(/\s/g, "");
+    if (!digits) errs.cardNumber = "Card number is required.";
+    else if (!/^\d{16}$/.test(digits)) errs.cardNumber = "Enter a valid 16-digit card number.";
+    if (!payment.expiry.trim()) errs.expiry = "Expiry date is required.";
+    else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(payment.expiry.trim())) errs.expiry = "Use MM/YY format.";
+    if (!payment.cvv.trim()) errs.cvv = "CVV is required.";
+    else if (!/^\d{3,4}$/.test(payment.cvv.trim())) errs.cvv = "Enter a valid 3 or 4 digit CVV.";
+    return errs;
+  };
+
   const handleApplyCoupon = () => {
     setCouponError("");
     const code = couponCode.trim().toUpperCase();
