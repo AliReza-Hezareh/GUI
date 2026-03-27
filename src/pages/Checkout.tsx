@@ -25,7 +25,6 @@ interface FormData {
   phone: string;
   address: string;
   city: string;
-  state: string;
   zip: string;
 }
 
@@ -39,7 +38,6 @@ const INITIAL_FORM: FormData = {
   phone: "",
   address: "",
   city: "",
-  state: "",
   zip: "",
 };
 
@@ -86,46 +84,45 @@ export default function Checkout() {
   const validate = (): FormErrors => {
     const errs: FormErrors = {};
 
-    if (!form.name.trim()) errs.name = "Full name is required.";
-    else if (form.name.trim().length < 2) errs.name = "Name must be at least 2 characters.";
+    if (!form.name.trim()) errs.name = "Fullständigt namn krävs.";
+    else if (form.name.trim().length < 2) errs.name = "Namnet måste vara minst 2 tecken.";
 
-    if (!form.email.trim()) errs.email = "Email address is required.";
+    if (!form.email.trim()) errs.email = "E-postadress krävs.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      errs.email = "Enter a valid email address.";
+      errs.email = "Ange en giltig e-postadress.";
 
     if (!form.phone.trim()) {
-      errs.phone = "Phone number is required.";
+      errs.phone = "Telefonnummer krävs.";
     } else {
       const digits = form.phone.replace(/\D/g, "");
       if (releaseMode) {
         // RELEASE DEFECT: requires exactly 11 digits but error says 10
-        if (digits.length !== 11) errs.phone = "Enter a valid 10-digit phone number.";
+        if (digits.length !== 11) errs.phone = "Ange ett giltigt telefonnummer (t.ex. 0701234567).";
       } else {
-        if (digits.length < 10 || digits.length > 11)
-          errs.phone = "Enter a valid 10-digit phone number.";
+        if (digits.length < 10 || digits.length > 13)
+          errs.phone = "Ange ett giltigt telefonnummer (t.ex. 0701234567).";
       }
     }
 
-    if (!form.address.trim()) errs.address = "Street address is required.";
-    if (!form.city.trim()) errs.city = "City is required.";
-    if (!form.state.trim()) errs.state = "State is required.";
-    if (!form.zip.trim()) errs.zip = "ZIP code is required.";
-    else if (!/^\d{5}(-\d{4})?$/.test(form.zip.trim()))
-      errs.zip = "Enter a valid ZIP code (e.g., 12345).";
+    if (!form.address.trim()) errs.address = "Gatuadress krävs.";
+    if (!form.city.trim()) errs.city = "Ort krävs.";
+    if (!form.zip.trim()) errs.zip = "Postnummer krävs.";
+    else if (!/^\d{3}\s?\d{2}$/.test(form.zip.trim()))
+      errs.zip = "Ange ett giltigt postnummer (t.ex. 114 55).";
 
     return errs;
   };
 
   const validatePayment = (): FormErrors => {
     const errs: FormErrors = {};
-    if (!payment.cardName.trim()) errs.cardName = "Name on card is required.";
+    if (!payment.cardName.trim()) errs.cardName = "Namn på kort krävs.";
     const digits = payment.cardNumber.replace(/\s/g, "");
-    if (!digits) errs.cardNumber = "Card number is required.";
-    else if (!/^\d{16}$/.test(digits)) errs.cardNumber = "Enter a valid 16-digit card number.";
-    if (!payment.expiry.trim()) errs.expiry = "Expiry date is required.";
-    else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(payment.expiry.trim())) errs.expiry = "Use MM/YY format.";
-    if (!payment.cvv.trim()) errs.cvv = "CVV is required.";
-    else if (!/^\d{3,4}$/.test(payment.cvv.trim())) errs.cvv = "Enter a valid 3 or 4 digit CVV.";
+    if (!digits) errs.cardNumber = "Kortnummer krävs.";
+    else if (!/^\d{16}$/.test(digits)) errs.cardNumber = "Ange ett giltigt 16-siffrigt kortnummer.";
+    if (!payment.expiry.trim()) errs.expiry = "Utgångsdatum krävs.";
+    else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(payment.expiry.trim())) errs.expiry = "Använd formatet MM/ÅÅ.";
+    if (!payment.cvv.trim()) errs.cvv = "CVV krävs.";
+    else if (!/^\d{3,4}$/.test(payment.cvv.trim())) errs.cvv = "Ange en giltig 3- eller 4-siffrig CVV.";
     return errs;
   };
 
@@ -133,15 +130,15 @@ export default function Checkout() {
     setCouponError("");
     const code = couponCode.trim().toUpperCase();
     if (!code) {
-      setCouponError("Enter a coupon code.");
+      setCouponError("Ange en rabattkod.");
       return;
     }
     if (COUPONS[code]) {
       setAppliedCoupon(code);
       setCouponError("");
-      announce(`Coupon applied: ${COUPONS[code].label}`);
+      announce(`Rabattkod tillämpad: ${COUPONS[code].label}`);
     } else {
-      setCouponError("Invalid coupon code. Try BREW10 or COFFEE20.");
+      setCouponError("Ogiltig rabattkod. Testa BREW10 eller COFFEE20.");
       setAppliedCoupon(null);
     }
   };
@@ -150,7 +147,7 @@ export default function Checkout() {
     setAppliedCoupon(null);
     setCouponCode("");
     setCouponError("");
-    announce("Coupon removed.");
+    announce("Rabattkod borttagen.");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -160,7 +157,7 @@ export default function Checkout() {
     const pErrs = validatePayment();
     setPaymentErrors(pErrs);
     if (Object.keys(errs).length > 0 || Object.keys(pErrs).length > 0) {
-      announce("Form has errors. Please review and correct them.");
+      announce("Formuläret har fel. Vänligen granska och rätta dem.");
       return;
     }
 
@@ -170,7 +167,7 @@ export default function Checkout() {
       id: orderId,
       items: cart.map((item) => ({ product: item.product, quantity: item.quantity })),
       total: finalTotal,
-      date: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+      date: new Date().toLocaleDateString("sv-SE", { year: "numeric", month: "long", day: "numeric" }),
       status: "confirmed",
       shippingName: form.name.trim(),
       shippingCity: form.city.trim(),
@@ -182,7 +179,7 @@ export default function Checkout() {
     setAppliedCoupon(null);
     setCouponCode("");
     if (!releaseMode) {
-      announce("Order placed successfully!");
+      announce("Beställningen har lagts!");
     }
   };
 
@@ -236,23 +233,23 @@ export default function Checkout() {
             tabIndex={-1}
             className="text-2xl font-bold mb-3 outline-none"
           >
-            {releaseMode ? "Order Received" : "Order Confirmed!"}
+            {releaseMode ? "Beställning mottagen" : "Beställning bekräftad!"}
           </h1>
           <div className="rounded-lg border bg-card p-4 mb-6 inline-block">
-            <p className="text-sm text-muted-foreground mb-1">Order ID</p>
+            <p className="text-sm text-muted-foreground mb-1">Order-ID</p>
             <p className="text-xl font-mono font-bold tracking-wide">#{placedOrderId}</p>
           </div>
           <p className="text-muted-foreground mb-6">
             {releaseMode
-              ? "Your order is under review and may take 3–5 business days to process. We'll reach out if there are any issues."
-              : "Thank you for your purchase! Your order has been placed and you'll receive a confirmation email shortly."}
+              ? "Din beställning granskas och kan ta 3–5 arbetsdagar att behandla. Vi kontaktar dig om det uppstår problem."
+              : "Tack för ditt köp! Din beställning har lagts och du kommer att få en bekräftelse via e-post inom kort."}
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Button asChild>
-              <Link to="/products">Continue Shopping</Link>
+              <Link to="/products">Fortsätt handla</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link to="/orders">View Orders</Link>
+              <Link to="/orders">Visa beställningar</Link>
             </Button>
           </div>
         </div>
@@ -264,12 +261,12 @@ export default function Checkout() {
     return (
       <Layout>
         <div className="container py-16 text-center">
-          <h1 className="text-2xl font-bold mb-3">Your Cart is Empty</h1>
+          <h1 className="text-2xl font-bold mb-3">Din kundvagn är tom</h1>
           <p className="text-muted-foreground mb-6">
-            Add some products to get started.
+            Lägg till produkter för att komma igång.
           </p>
           <Button asChild>
-            <Link to="/products">Browse Products</Link>
+            <Link to="/products">Bläddra bland produkter</Link>
           </Button>
         </div>
       </Layout>
@@ -279,7 +276,7 @@ export default function Checkout() {
   return (
     <Layout>
       <div className="container py-8">
-        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold mb-8">Kassa</h1>
 
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Form */}
@@ -287,14 +284,14 @@ export default function Checkout() {
             <form onSubmit={handleSubmit} noValidate>
               <fieldset>
                 <legend className="text-lg font-semibold mb-4">
-                  Shipping Information
+                  Leveransinformation
                 </legend>
 
                 <div className="grid gap-4">
                   {/* Name */}
                   <div>
                     <label htmlFor="checkout-name" className="block text-sm font-medium mb-1">
-                      Full Name {reqIndicator}
+                      Fullständigt namn {reqIndicator}
                     </label>
                     <input
                       id="checkout-name"
@@ -318,11 +315,11 @@ export default function Checkout() {
                   <div>
                     {releaseMode ? (
                       <label className="block text-sm font-medium mb-1">
-                        Email Address {reqIndicator}
+                        E-postadress {reqIndicator}
                       </label>
                     ) : (
                       <label htmlFor="checkout-email" className="block text-sm font-medium mb-1">
-                        Email Address {reqIndicator}
+                        E-postadress {reqIndicator}
                       </label>
                     )}
                     <input
@@ -346,7 +343,7 @@ export default function Checkout() {
                   {/* Phone */}
                   <div>
                     <label htmlFor="checkout-phone" className="block text-sm font-medium mb-1">
-                      Phone Number {reqIndicator}
+                      Telefonnummer {reqIndicator}
                     </label>
                     <input
                       id="checkout-phone"
@@ -358,9 +355,10 @@ export default function Checkout() {
                       aria-invalid={!!errors.phone}
                       aria-describedby="phone-hint phone-error"
                       autoComplete="tel"
+                      placeholder="070 123 45 67"
                     />
                     <p id="phone-hint" className="mt-1 text-xs text-muted-foreground">
-                      Format: (555) 123-4567 or 5551234567
+                      Format: 0701234567 eller +46701234567
                     </p>
                     {errors.phone && (
                       <p id="phone-error" className="mt-1 text-sm text-destructive" role="alert">
@@ -372,7 +370,7 @@ export default function Checkout() {
                   {/* Address */}
                   <div>
                     <label htmlFor="checkout-address" className="block text-sm font-medium mb-1">
-                      Street Address {reqIndicator}
+                      Gatuadress {reqIndicator}
                     </label>
                     <input
                       id="checkout-address"
@@ -392,53 +390,11 @@ export default function Checkout() {
                     )}
                   </div>
 
-                  {/* City / State / ZIP */}
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    <div>
-                      <label htmlFor="checkout-city" className="block text-sm font-medium mb-1">
-                        City {reqIndicator}
-                      </label>
-                      <input
-                        id="checkout-city"
-                        type="text"
-                        value={form.city}
-                        onChange={(e) => handleChange("city", e.target.value)}
-                        className={`h-10 w-full rounded-md border px-3 text-sm focus-ring ${errors.city ? "border-destructive" : "bg-card"}`}
-                        aria-required="true"
-                        aria-invalid={!!errors.city}
-                        aria-describedby={errors.city ? "city-error" : undefined}
-                        autoComplete="address-level2"
-                      />
-                      {errors.city && (
-                        <p id="city-error" className="mt-1 text-sm text-destructive" role="alert">
-                          {errors.city}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label htmlFor="checkout-state" className="block text-sm font-medium mb-1">
-                        State {reqIndicator}
-                      </label>
-                      <input
-                        id="checkout-state"
-                        type="text"
-                        value={form.state}
-                        onChange={(e) => handleChange("state", e.target.value)}
-                        className={`h-10 w-full rounded-md border px-3 text-sm focus-ring ${errors.state ? "border-destructive" : "bg-card"}`}
-                        aria-required="true"
-                        aria-invalid={!!errors.state}
-                        aria-describedby={errors.state ? "state-error" : undefined}
-                        autoComplete="address-level1"
-                      />
-                      {errors.state && (
-                        <p id="state-error" className="mt-1 text-sm text-destructive" role="alert">
-                          {errors.state}
-                        </p>
-                      )}
-                    </div>
+                  {/* Postnummer / Ort */}
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label htmlFor="checkout-zip" className="block text-sm font-medium mb-1">
-                        ZIP Code {reqIndicator}
+                        Postnummer {reqIndicator}
                       </label>
                       <input
                         id="checkout-zip"
@@ -450,10 +406,33 @@ export default function Checkout() {
                         aria-invalid={!!errors.zip}
                         aria-describedby={errors.zip ? "zip-error" : undefined}
                         autoComplete="postal-code"
+                        placeholder="114 55"
                       />
                       {errors.zip && (
                         <p id="zip-error" className="mt-1 text-sm text-destructive" role="alert">
                           {errors.zip}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label htmlFor="checkout-city" className="block text-sm font-medium mb-1">
+                        Ort {reqIndicator}
+                      </label>
+                      <input
+                        id="checkout-city"
+                        type="text"
+                        value={form.city}
+                        onChange={(e) => handleChange("city", e.target.value)}
+                        className={`h-10 w-full rounded-md border px-3 text-sm focus-ring ${errors.city ? "border-destructive" : "bg-card"}`}
+                        aria-required="true"
+                        aria-invalid={!!errors.city}
+                        aria-describedby={errors.city ? "city-error" : undefined}
+                        autoComplete="address-level2"
+                        placeholder="Stockholm"
+                      />
+                      {errors.city && (
+                        <p id="city-error" className="mt-1 text-sm text-destructive" role="alert">
+                          {errors.city}
                         </p>
                       )}
                     </div>
@@ -465,19 +444,19 @@ export default function Checkout() {
               <fieldset className="mt-8">
                 <legend className="text-lg font-semibold mb-2 flex items-center gap-2">
                   <CreditCard className="h-5 w-5" aria-hidden="true" />
-                  Payment Information
+                  Betalningsinformation
                 </legend>
                 <div className="rounded-lg border border-dashed border-muted-foreground/30 bg-muted/30 p-4 mb-4">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span><strong>DEMO ONLY</strong> — This is a simulated payment form. No real transactions are processed and no card data is stored or transmitted.</span>
+                    <span><strong>ENBART DEMO</strong> — Detta är ett simulerat betalningsformulär. Inga riktiga transaktioner genomförs och inga kortuppgifter lagras eller skickas.</span>
                   </div>
                 </div>
 
                 <div className="grid gap-4">
                   <div>
                     <label htmlFor="checkout-cardname" className="block text-sm font-medium mb-1">
-                      Name on Card {reqIndicator}
+                      Namn på kort {reqIndicator}
                     </label>
                     <input
                       id="checkout-cardname"
@@ -489,7 +468,7 @@ export default function Checkout() {
                       aria-invalid={!!paymentErrors.cardName}
                       aria-describedby={paymentErrors.cardName ? "cardname-error" : undefined}
                       autoComplete="cc-name"
-                      placeholder="John Doe"
+                      placeholder="Anna Andersson"
                     />
                     {paymentErrors.cardName && (
                       <p id="cardname-error" className="mt-1 text-sm text-destructive" role="alert">{paymentErrors.cardName}</p>
@@ -498,7 +477,7 @@ export default function Checkout() {
 
                   <div>
                     <label htmlFor="checkout-cardnumber" className="block text-sm font-medium mb-1">
-                      Card Number {reqIndicator}
+                      Kortnummer {reqIndicator}
                     </label>
                     <input
                       id="checkout-cardnumber"
@@ -521,7 +500,7 @@ export default function Checkout() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label htmlFor="checkout-expiry" className="block text-sm font-medium mb-1">
-                        Expiry Date {reqIndicator}
+                        Utgångsdatum {reqIndicator}
                       </label>
                       <input
                         id="checkout-expiry"
@@ -568,16 +547,16 @@ export default function Checkout() {
               <div className="mt-8">
                 <Button type="submit" size="lg" className="w-full sm:w-auto">
                   <Lock className="h-4 w-4 mr-2" aria-hidden="true" />
-                  Place Order (Demo)
+                  Lägg beställning (demo)
                 </Button>
               </div>
             </form>
           </div>
 
           {/* Cart Summary */}
-          <aside aria-label="Order summary">
+          <aside aria-label="Ordersammanfattning">
             <div className="rounded-lg border bg-card p-6 sticky top-24">
-              <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
+              <h2 className="text-lg font-semibold mb-4">Ordersammanfattning</h2>
 
               <ul className="divide-y">
                 {cart.map((item) => (
@@ -590,30 +569,30 @@ export default function Checkout() {
                         {item.product.name}
                       </p>
                       <p className="text-sm text-muted-foreground tabular-nums">
-                        ${item.product.price.toFixed(2)}
+                        {item.product.price} kr
                       </p>
                       <div className="mt-1 flex items-center gap-1">
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                           className="h-6 w-6 inline-flex items-center justify-center rounded border text-xs hover:bg-secondary focus-ring"
-                          aria-label={`Decrease quantity of ${item.product.name}`}
+                          aria-label={`Minska antal ${item.product.name}`}
                         >
                           <Minus className="h-3 w-3" aria-hidden="true" />
                         </button>
-                        <span className="w-6 text-center text-sm tabular-nums" aria-label={`Quantity: ${item.quantity}`}>
+                        <span className="w-6 text-center text-sm tabular-nums" aria-label={`Antal: ${item.quantity}`}>
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                           className="h-6 w-6 inline-flex items-center justify-center rounded border text-xs hover:bg-secondary focus-ring"
-                          aria-label={`Increase quantity of ${item.product.name}`}
+                          aria-label={`Öka antal ${item.product.name}`}
                         >
                           <Plus className="h-3 w-3" aria-hidden="true" />
                         </button>
                         <button
                           onClick={() => removeFromCart(item.product.id)}
                           className="ml-auto h-6 w-6 inline-flex items-center justify-center rounded text-muted-foreground hover:text-destructive focus-ring"
-                          aria-label={`Remove ${item.product.name} from cart`}
+                          aria-label={`Ta bort ${item.product.name} från kundvagnen`}
                         >
                           <Trash2 className="h-3 w-3" aria-hidden="true" />
                         </button>
@@ -627,7 +606,7 @@ export default function Checkout() {
               <div className="mt-4 border-t pt-4">
                 <label htmlFor="coupon-code" className="block text-sm font-medium mb-1">
                   <Tag className="inline h-3.5 w-3.5 mr-1" aria-hidden="true" />
-                  Coupon Code
+                  Rabattkod
                 </label>
                 {appliedCoupon ? (
                   <div className="flex items-center justify-between rounded-md border border-success/30 bg-success/5 px-3 py-2">
@@ -637,9 +616,9 @@ export default function Checkout() {
                     <button
                       onClick={handleRemoveCoupon}
                       className="text-sm text-muted-foreground hover:text-foreground focus-ring rounded-sm underline"
-                      aria-label="Remove coupon"
+                      aria-label="Ta bort rabattkod"
                     >
-                      Remove
+                      Ta bort
                     </button>
                   </div>
                 ) : (
@@ -661,7 +640,7 @@ export default function Checkout() {
                         variant="outline"
                         onClick={handleApplyCoupon}
                       >
-                        Apply
+                        Använd
                       </Button>
                     </div>
                     {couponError && (
@@ -676,18 +655,18 @@ export default function Checkout() {
               {/* Totals */}
               <div className="mt-4 border-t pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Subtotal</span>
-                  <span className="tabular-nums">${cartTotal.toFixed(2)}</span>
+                  <span>Delsumma</span>
+                  <span className="tabular-nums">{cartTotal} kr</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-sm text-success">
-                    <span>Discount</span>
-                    <span className="tabular-nums">−${discount.toFixed(2)}</span>
+                    <span>Rabatt</span>
+                    <span className="tabular-nums">−{discount} kr</span>
                   </div>
                 )}
                 <div className="flex justify-between text-lg font-bold pt-1 border-t">
-                  <span>Total</span>
-                  <span className="tabular-nums">${finalTotal.toFixed(2)}</span>
+                  <span>Totalt</span>
+                  <span className="tabular-nums">{finalTotal} kr</span>
                 </div>
               </div>
             </div>
