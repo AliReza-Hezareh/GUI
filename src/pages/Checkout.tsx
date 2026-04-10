@@ -561,8 +561,8 @@ export default function Checkout() {
               <ul className="divide-y">
                 {cart.map((item) => (
                   <li key={item.product.id} className="flex gap-3 py-3">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-secondary text-xl">
-                      <span aria-hidden="true">{item.product.icon}</span>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-secondary overflow-hidden">
+                      <img src={item.product.image} alt={item.product.imageAlt || ""} className="h-full w-full object-cover" loading="lazy" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">

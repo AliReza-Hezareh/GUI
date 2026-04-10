@@ -62,7 +62,9 @@ export default function OrderHistory() {
                   <ul className="divide-y">
                     {order.items.map((item, idx) => (
                       <li key={idx} className="flex items-center gap-3 py-2">
-                        <span className="text-xl" aria-hidden="true">{item.product.icon}</span>
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-secondary overflow-hidden">
+                          <img src={item.product.image} alt={item.product.imageAlt || ""} className="h-full w-full object-cover" loading="lazy" />
+                        </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">{item.product.name}</p>
                           <p className="text-xs text-muted-foreground">Antal: {item.quantity}</p>

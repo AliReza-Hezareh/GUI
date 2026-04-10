@@ -88,8 +88,8 @@ export default function Compare() {
                   <td className="p-3 border-b text-sm font-medium text-muted-foreground">Produkt</td>
                   {compared.map((product) => (
                     <td key={product.id} className="p-3 border-b">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-md bg-secondary text-3xl">
-                        <span aria-hidden="true">{product.icon}</span>
+                      <div className="flex h-20 w-20 items-center justify-center rounded-md bg-secondary overflow-hidden">
+                        <img src={product.image} alt={product.imageAlt || ""} className="h-full w-full object-cover" loading="lazy" />
                       </div>
                     </td>
                   ))}
