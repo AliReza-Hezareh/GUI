@@ -19,7 +19,22 @@ export interface Product {
   inStock: boolean;
   features: string[];
   icon: string;
+  image: string;
+  imageAlt?: string;
 }
+
+import pourOverImg from "@/assets/products/pour-over.jpg";
+import frenchPressImg from "@/assets/products/french-press.jpg";
+import aeropressImg from "@/assets/products/aeropress.jpg";
+import conicalGrinderImg from "@/assets/products/conical-grinder.jpg";
+import handGrinderImg from "@/assets/products/hand-grinder.jpg";
+import flatGrinderImg from "@/assets/products/flat-grinder.jpg";
+import gooseneckKettleImg from "@/assets/products/gooseneck-kettle.jpg";
+import brewingScaleImg from "@/assets/products/brewing-scale.jpg";
+import tastingCupsImg from "@/assets/products/tasting-cups.jpg";
+import ethiopianBeansImg from "@/assets/products/ethiopian-beans.jpg";
+import colombianBeansImg from "@/assets/products/colombian-beans.jpg";
+import espressoBlendImg from "@/assets/products/espresso-blend.jpg";
 
 export const products: Product[] = [
   {
@@ -34,6 +49,8 @@ export const products: Product[] = [
     inStock: true,
     features: ["600 ml kapacitet", "Borosilikatglas", "Rostfritt stålfilter", "Bambukrage"],
     icon: "☕",
+    image: pourOverImg,
+    imageAlt: "Pour-over karaff i glas med rostfritt stålfilter och bambukrage",
   },
   {
     id: "brew-002",
@@ -47,6 +64,8 @@ export const products: Product[] = [
     inStock: true,
     features: ["1 L kapacitet", "Dubbelväggig isolering", "4-stegs filtrering", "Rostfritt stål"],
     icon: "🫖",
+    image: frenchPressImg,
+    imageAlt: "Dubbelväggig French press i matt svart rostfritt stål",
   },
   {
     id: "brew-003",
@@ -60,6 +79,8 @@ export const products: Product[] = [
     inStock: true,
     features: ["1–2 min bryggtid", "350 filter ingår", "Reseväska", "BPA-fri"],
     icon: "🏕️",
+    image: aeropressImg,
+    imageAlt: "AeroPress resekit med väska och tillbehör",
   },
   {
     id: "grind-001",
@@ -73,6 +94,8 @@ export const products: Product[] = [
     inStock: true,
     features: ["40 mm koniska skär", "18 inställningar", "Lågvarvig motor", "250 g behållare"],
     icon: "⚙️",
+    image: conicalGrinderImg,
+    imageAlt: "Elektrisk konisk kaffekvarn med behållare",
   },
   {
     id: "grind-002",
@@ -86,6 +109,8 @@ export const products: Product[] = [
     inStock: true,
     features: ["Keramiska skär", "30 g kapacitet", "Valnötsdetaljer", "Ljudlös drift"],
     icon: "🔧",
+    image: handGrinderImg,
+    imageAlt: "Manuell handkvarn i trä med keramiska skär",
   },
   {
     id: "grind-003",
@@ -99,6 +124,8 @@ export const products: Product[] = [
     inStock: false,
     features: ["58 mm platta skär", "Digital kontroll", "3 profiler", "Steglös justering"],
     icon: "🎛️",
+    image: flatGrinderImg,
+    imageAlt: "Professionell elektrisk flatkvarn med digital display",
   },
   {
     id: "acc-001",
@@ -112,6 +139,7 @@ export const products: Product[] = [
     inStock: true,
     features: ["1,2 L kapacitet", "Variabel temp", "Hållläge", "Precisionspip"],
     icon: "🫗",
+    image: gooseneckKettleImg,
   },
   {
     id: "acc-002",
@@ -125,6 +153,7 @@ export const products: Product[] = [
     inStock: true,
     features: ["0,1 g noggrannhet", "Inbyggd timer", "USB-C laddning", "Vattenavvisande"],
     icon: "⚖️",
+    image: brewingScaleImg,
   },
   {
     id: "acc-003",
@@ -138,6 +167,7 @@ export const products: Product[] = [
     inStock: true,
     features: ["180 ml styck", "4-pack", "Dubbelväggigt glas", "Diskmaskinssäker"],
     icon: "🥃",
+    image: tastingCupsImg,
   },
   {
     id: "bean-001",
@@ -151,6 +181,8 @@ export const products: Product[] = [
     inStock: true,
     features: ["340 g påse", "Singelursprung", "Ljusrost", "Tvättad process"],
     icon: "🫘",
+    image: ethiopianBeansImg,
+    imageAlt: "Påse med etiopiska Yirgacheffe ljusrostade kaffebönor",
   },
   {
     id: "bean-002",
@@ -164,6 +196,8 @@ export const products: Product[] = [
     inStock: true,
     features: ["340 g påse", "Mellanrost", "Huila-regionen", "Mångsidig"],
     icon: "☕",
+    image: colombianBeansImg,
+    imageAlt: "Påse med colombianska Supremo mellanrostade kaffebönor",
   },
   {
     id: "bean-003",
@@ -177,5 +211,7 @@ export const products: Product[] = [
     inStock: true,
     features: ["340 g påse", "Mörkrost", "Espressooptimerad", "3-ursprungsblandning"],
     icon: "🖤",
+    image: espressoBlendImg,
+    imageAlt: "Påse med mörkrostad espresso signaturblend",
   },
 ];
