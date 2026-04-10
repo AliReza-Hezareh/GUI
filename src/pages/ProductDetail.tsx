@@ -83,8 +83,14 @@ export default function ProductDetail() {
         </Link>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          <div className="rounded-lg border bg-secondary/30 product-image-placeholder text-7xl">
-            <span aria-hidden="true">{product.icon}</span>
+          <div className="rounded-lg border bg-secondary/30 overflow-hidden">
+            <img
+              src={product.image}
+              alt={product.imageAlt || ""}
+              width={512}
+              height={512}
+              className="w-full h-auto object-cover"
+            />
           </div>
 
           <div>
@@ -284,8 +290,8 @@ export default function ProductDetail() {
                   to={`/products/${p.id}`}
                   className="group flex gap-4 rounded-lg border bg-card p-4 transition-shadow hover:shadow-md focus-ring"
                 >
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md bg-secondary text-2xl">
-                    <span aria-hidden="true">{p.icon}</span>
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-md bg-secondary overflow-hidden">
+                    <img src={p.image} alt={p.imageAlt || ""} className="h-full w-full object-cover" loading="lazy" />
                   </div>
                   <div>
                     <h3 className="font-semibold group-hover:text-primary transition-colors">

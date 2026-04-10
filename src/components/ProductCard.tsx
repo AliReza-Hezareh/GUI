@@ -65,10 +65,16 @@ export default function ProductCard({ product, highlightMatch, onQuickView }: Pr
   const cardContent = (
     <>
       <div
-        className={`product-image-placeholder rounded-t-lg relative ${CATEGORY_COLORS[product.category] || "bg-muted"}`}
+        className={`relative aspect-square overflow-hidden rounded-t-lg ${CATEGORY_COLORS[product.category] || "bg-muted"}`}
       >
-        <span className="text-5xl" aria-hidden="true">{product.icon}</span>
-
+        <img
+          src={product.image}
+          alt={product.imageAlt || ""}
+          loading="lazy"
+          width={512}
+          height={512}
+          className="h-full w-full object-cover"
+        />
         <div className="absolute top-2 right-2 flex gap-1">
           {releaseMode ? (
             <button
