@@ -67,8 +67,15 @@ export default function QuickViewModal({ product, onClose }: QuickViewModalProps
           </button>
         </div>
 
-        <div className="flex items-center justify-center rounded-lg bg-secondary/50 py-8 mb-4">
-          <span className="text-6xl" aria-hidden="true">{product.icon}</span>
+        <div className="flex items-center justify-center rounded-lg bg-secondary/50 overflow-hidden mb-4">
+          <img
+            src={product.image}
+            alt={product.imageAlt || ""}
+            loading="lazy"
+            width={512}
+            height={512}
+            className="w-full h-auto object-cover"
+          />
         </div>
 
         <div className="space-y-3">
