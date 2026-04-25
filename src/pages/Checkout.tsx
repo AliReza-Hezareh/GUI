@@ -2,8 +2,16 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useApp } from "@/context/AppContext";
-import { Trash2, Plus, Minus, CheckCircle, Tag, CreditCard, Lock } from "lucide-react";
+import { Trash2, Plus, Minus, CheckCircle, Tag, CreditCard, Lock, Truck, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface PaymentData {
   cardNumber: string;
@@ -223,43 +231,69 @@ export default function Checkout() {
     <span className="required-indicator" aria-hidden="true">*</span>
   );
 
-  if (submitted) {
-    return (
-      <Layout>
-        <div className="container py-16 max-w-lg text-center">
-          <CheckCircle className="mx-auto h-16 w-16 text-success mb-4" aria-hidden="true" />
-          <h1
+  const handleCloseConfirmation = () => {
+    setSubmitted(false);
+    setForm(INITIAL_FORM);
+    setPayment(INITIAL_PAYMENT);
+  };
+
+  const confirmationModal = (
+    <Dialog open={submitted} onOpenChange={(open) => { if (!open) handleCloseConfirmation(); }}>
+      <DialogContent className="sm:max-w-md" aria-labelledby="order-confirm-title">
+        <DialogHeader>
+          <div className="mx-auto mb-2 flex h-14 w-14 items-center justify-center rounded-full bg-success/10">
+            <CheckCircle className="h-8 w-8 text-success" aria-hidden="true" />
+          </div>
+          <DialogTitle
+            id="order-confirm-title"
             ref={confirmRef}
             tabIndex={-1}
-            className="text-2xl font-bold mb-3 outline-none"
+            className="text-center text-2xl outline-none"
           >
             {releaseMode ? "Beställning mottagen" : "Beställning bekräftad!"}
-          </h1>
-          <div className="rounded-lg border bg-card p-4 mb-6 inline-block">
-            <p className="text-sm text-muted-foreground mb-1">Order-ID</p>
-            <p className="text-xl font-mono font-bold tracking-wide">#{placedOrderId}</p>
-          </div>
-          <p className="text-muted-foreground mb-6">
+          </DialogTitle>
+          <DialogDescription className="text-center">
             {releaseMode
-              ? "Din beställning granskas och kan ta 3–5 arbetsdagar att behandla. Vi kontaktar dig om det uppstår problem."
-              : "Tack för ditt köp! Din beställning har lagts och du kommer att få en bekräftelse via e-post inom kort."}
+              ? "Din beställning granskas och kan ta 3–5 arbetsdagar att behandla."
+              : "Tack för ditt köp! En bekräftelse skickas till din e-post inom kort."}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="rounded-lg border bg-muted/40 p-4 text-center">
+          <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">Order-ID</p>
+          <p className="text-2xl font-mono font-bold tracking-wide">#{placedOrderId}</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Spara detta nummer för att spåra din beställning
           </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Button asChild>
+        </div>
+
+        <DialogFooter className="sm:flex-col sm:space-x-0 gap-2">
+          <Button asChild className="w-full">
+            <Link to={`/track?id=${placedOrderId}`}>
+              <Truck className="h-4 w-4 mr-2" aria-hidden="true" />
+              Spåra beställning
+            </Link>
+          </Button>
+          <div className="flex gap-2">
+            <Button asChild variant="outline" className="flex-1">
+              <Link to="/orders">
+                <Package className="h-4 w-4 mr-1.5" aria-hidden="true" />
+                Mina beställningar
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="flex-1">
               <Link to="/products">Fortsätt handla</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link to="/orders">Visa beställningar</Link>
-            </Button>
           </div>
-        </div>
-      </Layout>
-    );
-  }
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !submitted) {
     return (
       <Layout>
+        {confirmationModal}
         <div className="container py-16 text-center">
           <h1 className="text-2xl font-bold mb-3">Din kundvagn är tom</h1>
           <p className="text-muted-foreground mb-6">
@@ -275,6 +309,7 @@ export default function Checkout() {
 
   return (
     <Layout>
+      {confirmationModal}
       <div className="container py-8">
         <h1 className="text-3xl font-bold mb-8">Kassa</h1>
 
