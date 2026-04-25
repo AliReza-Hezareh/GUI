@@ -35,6 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           title: "Support",
           links: [
             { label: "Hjälpcenter", to: "/contact" },
+            { label: "Spåra beställning", to: "/track" },
             { label: "Returer", to: "/reclamation" },
             { label: "Fraktinfo", to: "/contact" },
           ],
@@ -79,6 +80,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           title: "Support",
           links: [
             { label: "Hjälpcenter", to: "/contact" },
+            { label: "Spåra beställning", to: "/track" },
             { label: "Returer", to: "/reclamation" },
             { label: "Fraktinfo", to: "/contact" },
           ],

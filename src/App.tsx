@@ -19,6 +19,7 @@ import Wishlist from "./pages/Wishlist";
 import OrderHistory from "./pages/OrderHistory";
 import Compare from "./pages/Compare";
 import Reclamation from "./pages/Reclamation";
+import TrackOrder from "./pages/TrackOrder";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="/signup" element={<Signup />} />
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/orders" element={<OrderHistory />} />
+              <Route path="/track" element={<TrackOrder />} />
               <Route path="/compare" element={<Compare />} />
               <Route path="/reclamation" element={<Reclamation />} />
               <Route path="/teacher" element={<TeacherPanelPage />} />
