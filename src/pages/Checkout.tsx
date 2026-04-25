@@ -2,8 +2,16 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { useApp } from "@/context/AppContext";
-import { Trash2, Plus, Minus, CheckCircle, Tag, CreditCard, Lock } from "lucide-react";
+import { Trash2, Plus, Minus, CheckCircle, Tag, CreditCard, Lock, Truck, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface PaymentData {
   cardNumber: string;
