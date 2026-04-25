@@ -309,6 +309,7 @@ export default function Checkout() {
 
   return (
     <Layout>
+      {confirmationModal}
       <div className="container py-8">
         <h1 className="text-3xl font-bold mb-8">Kassa</h1>
 
