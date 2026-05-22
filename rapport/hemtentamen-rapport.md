@@ -54,6 +54,8 @@ Riskprioritering:
 ### OBS-004 (Medium) - Otydlig success feedback i kundvagnsflöde
 **Observation:** Badge uppdateras vid `Lägg i kundvagn`, men vid snabba upprepade klick blir återkopplingen svag.  
 **Påverkan:** Användaren kan öka antal i kundvagnen oavsiktligt.  
+**Analys:** När användaren inte får tydlig bekräftelse per klick uppstår osäkerhet om handlingen registrerades. Det ökar risken för dubbelköp eller fel antal artiklar i beställningen.  
+**Analys:** I ett snabbt köpflöde skapar svag återkoppling extra kontrollsteg för användaren, vilket sänker både effektivitet och förtroende i checkoutprocessen.  
 **Förbättring:** Tydligare toast med produkt + antal och kort spärr mot dubbelsnabba klick.  
 **Bilaga:** `bilaga-04` till `bilaga-07`.
 
@@ -67,12 +69,16 @@ Valda flöden:
 - Sök/filter (TC-003, TC-007)
 - Kundvagn/kassa (TC-004, TC-008)
 - Mobil/a11y (TC-005, TC-006)
+- Fördjupad regression och robusthet (TC-009, TC-010, TC-011, TC-012)
 
 Begränsning/risk i testupplägget:
 Flera tester använder textbaserade selectors och roll-namn. Det gör testerna tydliga ur användarperspektiv, men de kan bli sköra vid copy-ändringar även när funktionaliteten är oförändrad.
 
 Konkret förbättring nästa iteration:
-Inför stabila `data-testid` på kritiska element (till exempel CTA-knappar, kundvagnsikon och checkout-submit) och använd dem i nyckeltester för mer stabil regressionstestning.
+- Inför stabila `data-testid` på kritiska element (CTA-knappar, kundvagnsikon, checkout-submit).
+- Lägg till stabil regression för badge-increment vid tre snabba klick på `Lägg i kundvagn`.
+- Lägg till keyboard-only scenario för topnav + CTA med tydligt fokussteg.
+- Lägg till negativt checkout-test med ogiltigt format och verifiering av korrekt felmeddelande.
 
 ## 4. Exekvering och reflektion
 
@@ -82,9 +88,9 @@ Resultat:
 
 | Mätpunkt | Värde |
 |---|---:|
-| Totalt körda tester | 16 |
-| Unika testfall | 8 |
-| Pass | 16 |
+| Totalt körda tester | 24 |
+| Unika testfall | 12 |
+| Pass | 24 |
 | Fail | 0 |
 
 Slutsats: funktionella huvudflöden passerar i nuvarande testomfång.  
@@ -92,3 +98,11 @@ Kvarstående risker: dependency-säkerhet (`npm audit`: 16 sårbarheter, varav 9
 
 Testkörningen fungerade smidigt för regression eftersom samma Playwright-svit kunde köras snabbt i både desktop- och mobilvy. Det som tog mest tid var att verifiera visuella UI-problem (kontrast, fokus och återkoppling), eftersom de kräver manuell granskning och bilagor utöver automatiska testresultat.
 Ett konkret exempel på skörhet är tester som klickar på knappen via texten `Lägg i kundvagn`: om texten ändras till `Lägg i varukorg` kan testet falla även om funktionen fortfarande fungerar.
+
+Risker som kvarstår:
+
+| Risk | Varför ej fullt täckt | Konsekvens |
+|---|---|---|
+| Endast UI-lager testat mot live | Testerna validerar användarflöden i gränssnittet men isolerar inte backend/API-svar | Fel i API-kontrakt eller datalager kan missas trots gröna GUI-tester |
+| Textbaserade selectors i flera testfall | Selektorer bygger delvis på synlig knapptext och aria-namn | Copy-ändringar kan ge falska fail i regressionen |
+| Säkerhetsfynd i dependency audit (9 high, 7 moderate) | Audit-resultatet är dokumenterat men inte åtgärdat i detta testuppdrag | Kvarstående sårbarheter kan påverka säkerhet och release-risk |
