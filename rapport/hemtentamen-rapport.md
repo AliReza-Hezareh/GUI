@@ -52,6 +52,7 @@ Jag testar Brewscape som en ny användare som vill köpa kaffeutrustning online.
 **Observation:** Knappen `Kontakta oss` i hero-sektionen har så låg kontrast i normal-läge att texten i praktiken ser osynlig ut tills användaren hovrar med musen.  
 **Påverkan:** Användaren kan missa att det är en klickbar CTA och tappar ett tydligt nästa steg, särskilt på mobil där hover inte finns.  
 **Förbättring:** Höj kontrasten i default-läget och använd samma visuella tydlighet som primärknappen, inklusive tydlig textfärg och synlig knappkant.
+**Bilaga:** Se `rapport/bilagor/bilaga-01-kontakta-oss-synlighet.gif`.
 
 ### OBS-002 (Low) - Många felmeddelanden samtidigt i kassan
 
@@ -65,11 +66,12 @@ Jag testar Brewscape som en ny användare som vill köpa kaffeutrustning online.
 **Påverkan:** Användaren kan behöva testa sig fram för att förstå ikonernas betydelse, vilket ökar friktionen i viktiga flöden som konto och kundvagn.  
 **Förbättring:** Lägg till synliga etiketter eller tydligare tooltip/fokusnamn för ikonknappar, särskilt för konto, inloggning och kundvagn.
 
-### OBS-004 (Low) - Risk för inkonsekvent textkvalitet i UI
+### OBS-004 (Medium) - Otydlig success feedback i kundvagnsflöde
 
-**Observation:** Källkoden innehåller mojibake-strängar som `SÃ¶k` och `LÃ¤gg`, vilket visar risk för att svenska tecken kan bli fel i gränssnittet.  
-**Påverkan:** Om detta visas i produktion upplevs sidan som oprofessionell och svårare att läsa.  
-**Förbättring:** Säkerställ UTF-8 i hela textkedjan (källfiler, build och rendering) och lägg till en automatisk kontroll som stoppar trasiga tecken i CI.
+**Observation:** Vid `Lägg i kundvagn` syns uppdatering i kundvagnsbadge, men återkopplingen är svag när användaren klickar flera gånger snabbt och det blir inte tydligt om varje klick registrerats som förväntat.  
+**Påverkan:** Användaren kan bli osäker på om produkten lagts till korrekt och riskerar att klicka igen i onödan, vilket kan ge fler artiklar än tänkt i kundvagnen.  
+**Förbättring:** Visa tydligare och konsekvent success feedback efter varje klick, till exempel en mer framträdande toast med produktnamn och aktuellt antal i kundvagnen samt kort spärr mot dubbelsnabba klick.
+**Bilaga:** Se `rapport/bilagor/bilaga-04-kundvagn-feedback-fore-klick.png`, `rapport/bilagor/bilaga-05-kundvagn-feedback-efter-klick-1.png`, `rapport/bilagor/bilaga-06-kundvagn-feedback-efter-klick-2.png` och `rapport/bilagor/bilaga-07-kundvagn-feedback-spam-klick.png`.
 
 ## 3. Praktisk testning med verktyg
 
