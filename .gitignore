@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# QA generated artifacts
+qa/playwright-html-report/
+qa/test-artifacts/
+qa/test-results/
+
