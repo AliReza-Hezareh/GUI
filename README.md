@@ -1,8 +1,8 @@
 # Brewscape - App + QA (Hemtentamen GUI och användbarhetstest)
 
-Det här repot innehåller hela appen samt QA-del: tester, testrapporter, buggrapport och bilagor.
+Det här repot innehåller hela appen och QA-delen: tester, rapporter, buggrapport, testresultat och bilagor.
 
-## Viktiga kommandon
+## Snabbstart (PowerShell)
 
 ```powershell
 cd "C:\Users\Ali Reza\Documents\studier\frans_schratau\GUI\GUI och användbarhetstest-Sharepoint\Hemtentamen\brewscape-qa\mt-brewscape"
@@ -10,6 +10,18 @@ npm install --package-lock=false
 npx.cmd playwright install chromium
 powershell -ExecutionPolicy Bypass -File qa\run-tests.ps1
 ```
+
+Detta kör testsviten och uppdaterar QA-rapporten automatiskt.
+
+## Testflöde
+
+1. Kör alla tester med `qa\run-tests.ps1`.
+2. Öppna visuell testrapport i `qa\index.html` (uppdateras efter varje testkörning).
+3. Kontrollera detaljer i `qa\testresultat.md`.
+4. Kontrollera buggar i `qa\buggrapport.md`.
+5. Uppdatera skriftlig rapport i `rapport\hemtentamen-rapport.md` vid nya fynd.
+
+## Fler testkommandon
 
 Kör bara desktop:
 
@@ -23,27 +35,35 @@ Kör bara mobil:
 npx.cmd playwright test --project=mobile-chromium
 ```
 
-Öppna Playwright HTML-rapport:
+Öppna Playwrights HTML-rapport:
 
 ```powershell
 npx.cmd playwright show-report qa\playwright-html-report
 ```
 
+Skapa/uppdatera QA-webbsidan manuellt:
+
+```powershell
+node qa\generate-report.mjs
+```
+
+## Var dokumentation och planering finns
+
+- Huvudrapport: `rapport\hemtentamen-rapport.md`
+- Bilageöversikt: `rapport\bilagor.md`
+- Enkätunderlag: `rapport\bilaga-enkät.md`
+- AI-redovisning: `rapport\ai-redovisning.md`
+- Bilagor (bilder/GIF): `rapport\bilagor\`
+- Frågeformulär (PDF): `GUI Förmulär.pdf`
+
 ## Vad som testas
 
 - Startsida och navigation
-- Produktsida och produktsökning
-- Produktdetalj
+- Produktsida, sök/filter och detaljvy
 - Kundvagn och kassa
-- Tomma obligatoriska fält
-- Mobilvy 375px
-- Tangentbordsfokus
-- Enkel accessibility-kontroll
-- Svenska tecken, så ÅÄÖ inte visas som trasiga tecken
-
-## Frågeformulär
-
-Frågeformuläret finns som PDF i projektmappen och heter `GUI Förmulär.pdf`.
+- Validering av obligatoriska fält
+- Mobilvy (375px)
+- Tangentbordsfokus och enkel tillgänglighetskontroll
 
 ## Testmiljö
 
@@ -51,10 +71,3 @@ Frågeformuläret finns som PDF i projektmappen och heter `GUI Förmulär.pdf`.
 - Browser: Chromium via Playwright
 - Testad app: https://mt-brewscape.lovable.app
 - Testverktyg: Playwright
-- Senaste testkörning: 2026-05-22, 16/16 Playwright-tester passade
-
-## AI-redovisning
-
-Arbetet bygger främst på egen testning, kursmaterial och källor från nätet.  
-I svårare delar av informationssökningen använde jag främst ChatGPT och Gemini som komplement till vanlig webbsökning.  
-All testdesign, testkörning, resultatgranskning och slutlig dokumentation har jag själv utfört och verifierat.
