@@ -89,3 +89,6 @@ Resultat:
 
 Slutsats: funktionella huvudflöden passerar i nuvarande testomfång.  
 Kvarstående risker: dependency-säkerhet (`npm audit`: 16 sårbarheter, varav 9 high och 7 moderate) samt UI-tydlighet/fokus i kritiska interaktioner.
+
+Testkörningen fungerade smidigt för regression eftersom samma Playwright-svit kunde köras snabbt i både desktop- och mobilvy. Det som tog mest tid var att verifiera visuella UI-problem (kontrast, fokus och återkoppling), eftersom de kräver manuell granskning och bilagor utöver automatiska testresultat.
+Ett konkret exempel på skörhet är tester som klickar på knappen via texten `Lägg i kundvagn`: om texten ändras till `Lägg i varukorg` kan testet falla även om funktionen fortfarande fungerar.
