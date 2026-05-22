@@ -7,6 +7,14 @@ async function expectNoMojibake(page) {
   expect(bodyText, "Svenska tecken ska visas rätt, inte som mojibake").not.toMatch(mojibakePattern);
 }
 
+async function getHeaderBadgeCount(page) {
+  const headerTexts = await page.locator("header span").allInnerTexts();
+  const numbers = headerTexts
+    .map((text) => Number.parseInt(text.trim(), 10))
+    .filter((value) => Number.isFinite(value));
+  return numbers.length > 0 ? Math.max(...numbers) : 0;
+}
+
 test.describe("Brewscape GUI och användbarhet", () => {
   test("TC-001 startsidan laddas utan crash och visar huvudnavigation", async ({ page }) => {
     await page.goto("/");
@@ -122,5 +130,74 @@ test.describe("Brewscape GUI och användbarhet", () => {
       }
     }
     expect(unnamed, `Synliga kontroller saknar tillgängligt namn: ${unnamed.join(", ")}`).toEqual([]);
+  });
+
+  test("TC-009 regression: kundvagnsbadge ökar deterministiskt vid tre snabba klick", async ({ page }) => {
+    await page.goto("/products");
+    const beforeCount = await getHeaderBadgeCount(page);
+
+    const addButton = page.getByRole("button", { name: /Lägg i kundvagn|Lägg i korgen/i }).first();
+    await addButton.click();
+    await addButton.click();
+    await addButton.click();
+
+    await expect
+      .poll(async () => getHeaderBadgeCount(page), { message: "Kundvagnsbadge ska uppdateras efter tre klick" })
+      .toBeGreaterThanOrEqual(beforeCount + 3);
+  });
+
+  test("TC-010 a11y/ui: keyboard-only tab-sekvens når topnav eller CTA med synligt fokus", async ({ page }) => {
+    await page.goto("/");
+    await page.mouse.click(10, 10);
+
+    let reachedKeyArea = false;
+    for (let i = 0; i < 20; i++) {
+      await page.keyboard.press("Tab");
+      const focused = page.locator(":focus");
+      await expect(focused).toBeVisible();
+
+      const focusedText = await focused.innerText().catch(() => "");
+      const focusedLabel = await focused.getAttribute("aria-label").catch(() => "");
+      const combined = `${focusedText} ${focusedLabel}`;
+      if (combined.match(/Hem|Produkter|Kontakt|Konto|Utforska produkter|Kontakta oss/i)) {
+        reachedKeyArea = true;
+        break;
+      }
+    }
+
+    expect(reachedKeyArea, "Tab-navigering ska nå topnav eller CTA inom 20 steg").toBeTruthy();
+  });
+
+  test("TC-011 form validation: ogiltiga format i checkout ger fel och blockerar beställning", async ({ page }) => {
+    await page.goto("/products");
+    await page.getByRole("button", { name: /Lägg i kundvagn|Lägg i korgen/i }).first().click();
+    await page.getByRole("link", { name: /Kundvagn/i }).click();
+    await expect(page).toHaveURL(/\/checkout/);
+
+    await page.getByLabel(/fullständigt namn/i).fill("Ali Reza");
+    await page.getByLabel(/e-post/i).fill("invalid-email");
+    await page.getByLabel(/kortnummer/i).fill("1234");
+    await page.getByRole("button", { name: /Lägg beställning/i }).click();
+
+    await expect(page).toHaveURL(/\/checkout/);
+    await expect(page.getByText(/ogiltig|e-post|kortnummer|måste/i).first()).toBeVisible();
+
+  });
+
+  test("TC-012 stabilitet: robust locatorstrategi för kritisk knapp med fallback", async ({ page }) => {
+    await page.goto("/products");
+    const beforeCount = await getHeaderBadgeCount(page);
+
+    const addByTestId = page.getByTestId("add-to-cart");
+    const testIdCount = await addByTestId.count();
+    if (testIdCount > 0) {
+      await addByTestId.first().click();
+    } else {
+      await page.getByRole("button", { name: /Lägg i kundvagn|Lägg i korgen/i }).first().click();
+    }
+
+    await expect
+      .poll(async () => getHeaderBadgeCount(page), { message: "Kundvagnsbadge ska öka efter klick på kritisk knapp" })
+      .toBeGreaterThan(beforeCount);
   });
 });

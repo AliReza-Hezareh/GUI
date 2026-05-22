@@ -54,16 +54,20 @@ node qa\generate-report.mjs
 - Enkätunderlag: `rapport\bilaga-enkät.md`
 - AI-redovisning: `rapport\ai-redovisning.md`
 - Bilagor (bilder/GIF): `rapport\bilagor\`
-- Frågeformulär (PDF): `GUI Förmulär.pdf`
+- Frågeformulär (PDF): `qa\Ankät\GUI Förmulär.pdf`
+- Visuell QA-sammanställning: `qa\index.html`
+- Testresultat: `qa\testresultat.md`
+- Buggrapport: `qa\buggrapport.md`
 
 ## Vad som testas
 
 - Startsida och navigation
 - Produktsida, sök/filter och detaljvy
 - Kundvagn och kassa
-- Validering av obligatoriska fält
+- Validering av obligatoriska fält och ogiltiga format
 - Mobilvy (375px)
-- Tangentbordsfokus och enkel tillgänglighetskontroll
+- Tangentbordsfokus och tillgänglighetsbaserade kontroller
+- Stabilitet vid snabba upprepade klick i kundvagnsflöde
 
 ## Testmiljö
 
