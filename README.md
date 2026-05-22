@@ -38,7 +38,7 @@ powershell -ExecutionPolicy Bypass -File qa\run-tests.ps1
 
 | Plats | Innehåll | När den används |
 |---|---|---|
-| `rapport\hemtentamen-rapport.md` | Huvudrapport Del 1-4 | Bedömning av analys/reflektion |
+| `rapport\hemtentamen-rapport.md` | Huvudrapport | Bedömning av analys/reflektion |
 | `rapport\bilagor.md` | Översikt av bilagor | Kontroll av bevismaterial |
 | `rapport\bilagor\` | PNG/GIF-bilagor | Visuell verifiering av observationer |
 | `qa\testresultat.md` | Testutfall per testfall | Detaljerad testexekvering |
