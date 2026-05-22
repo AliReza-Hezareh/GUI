@@ -55,4 +55,6 @@ Frågeformuläret finns som PDF i projektmappen och heter `GUI Förmulär.pdf`.
 
 ## AI-redovisning
 
-AI användes för första version av teststruktur, rapportmallar och Playwright-tester. Jag granskar själv vad testerna gör, kör dem lokalt och använder resultatet i rapporten.
+Arbetet bygger främst på egen testning, kursmaterial och källor från nätet.  
+I svårare delar av informationssökningen använde jag främst ChatGPT och Gemini som komplement till vanlig webbsökning.  
+All testdesign, testkörning, resultatgranskning och slutlig dokumentation har jag själv utfört och verifierat.

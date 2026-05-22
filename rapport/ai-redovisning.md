@@ -1,19 +1,15 @@
-﻿# AI-redovisning
+# AI-redovisning
 
-AI användes som stöd för att:
+Arbetet har främst gjorts med egen testning, kursmaterial och källor från nätet.
 
-- tolka uppgiften
-- skapa struktur för QA-projektet
-- skapa Playwright-testfall
-- skapa första version av rapport, enkätbilaga och README
-- formulera buggrapport på enkel svenska
+I svårare delar av informationssökningen användes ChatGPT och Gemini i begränsad omfattning som komplement till vanlig webbsökning.
 
-Jag ansvarar själv för att:
+Jag ansvarar själv för:
 
-- granska att testerna passar uppgiften
-- köra testerna
-- kontrollera om resultaten stämmer
-- välja vad som ska lämnas in
-- skriva om text om något inte låter som mig
+- testdesign och prioriteringar
+- implementation av tester
+- testkörning och verifiering av resultat
+- analys av avvikelser och buggar
+- slutlig rapportering och formulering
 
-AI har inte ändrat appens funktioner. Ändringarna gäller test, QA-dokumentation och QA-rapportering.
+AI har inte använts för att ändra applikationens funktioner. All kod och dokumentation i inlämningen är manuellt granskad innan publicering.
