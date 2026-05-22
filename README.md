@@ -1,6 +1,6 @@
-﻿# Brewscape QA - Hemtentamen GUI och användbarhetstest
+# Brewscape - App + QA (Hemtentamen GUI och användbarhetstest)
 
-Det här är min QA-inlämning för Brewscape. Jag testar webbappen som en ny användare som vill hitta kaffeutrustning, förstå sidan och kunna gå vidare till kundvagn/kassa.
+Det här repot innehåller hela appen samt QA-del: tester, testrapporter, buggrapport och bilagor.
 
 ## Viktiga kommandon
 
@@ -23,7 +23,7 @@ Kör bara mobil:
 npx.cmd playwright test --project=mobile-chromium
 ```
 
-Öppna Playwrights HTML-rapport:
+Öppna Playwright HTML-rapport:
 
 ```powershell
 npx.cmd playwright show-report qa\playwright-html-report
@@ -53,21 +53,6 @@ Frågeformuläret finns som PDF i projektmappen och heter `GUI Förmulär.pdf`.
 - Testverktyg: Playwright
 - Senaste testkörning: 2026-05-22, 16/16 Playwright-tester passade
 
-## Uppdatera repo efter QA-ändring
-
-Kör detta när bara QA/test-filer ska upp:
-
-```powershell
-cd "C:\Users\Ali Reza\Documents\studier\frans_schratau\GUI\GUI och användbarhetstest-Sharepoint\Hemtentamen\brewscape-qa\mt-brewscape"
-git -c safe.directory="C:/Users/Ali Reza/Documents/studier/frans_schratau/GUI/GUI och användbarhetstest-Sharepoint/Hemtentamen/brewscape-qa/mt-brewscape" pull --rebase
-git -c safe.directory="C:/Users/Ali Reza/Documents/studier/frans_schratau/GUI/GUI och användbarhetstest-Sharepoint/Hemtentamen/brewscape-qa/mt-brewscape" status --short
-git -c safe.directory="C:/Users/Ali Reza/Documents/studier/frans_schratau/GUI/GUI och användbarhetstest-Sharepoint/Hemtentamen/brewscape-qa/mt-brewscape" add README.md tests qa rapport "GUI Förmulär.pdf" playwright.config.ts .gitignore
-git -c safe.directory="C:/Users/Ali Reza/Documents/studier/frans_schratau/GUI/GUI och användbarhetstest-Sharepoint/Hemtentamen/brewscape-qa/mt-brewscape" commit -m "Uppdatera QA-dokumentation och testresultat"
-git -c safe.directory="C:/Users/Ali Reza/Documents/studier/frans_schratau/GUI/GUI och användbarhetstest-Sharepoint/Hemtentamen/brewscape-qa/mt-brewscape" push
-```
-
 ## AI-redovisning
 
-AI användes för att skapa första version av teststruktur, rapportmallar och Playwright-tester. Jag granskar själv vad testerna gör, kör dem lokalt och använder resultatet i rapporten.
-
-
+AI användes för första version av teststruktur, rapportmallar och Playwright-tester. Jag granskar själv vad testerna gör, kör dem lokalt och använder resultatet i rapporten.
