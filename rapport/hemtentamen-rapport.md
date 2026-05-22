@@ -60,11 +60,12 @@ Jag testar Brewscape som en ny användare som vill köpa kaffeutrustning online.
 **Påverkan:** En ny användare kan känna att formuläret är rörigt och osäkert på vilket fält som ska rättas först.  
 **Förbättring:** Sätt fokus på första felaktiga fältet och visa en tydlig sammanfattning högst upp som guidar användaren steg för steg.
 
-### OBS-003 (Medium) - Otydlig ikonbaserad toppnavigation
+### OBS-003 (Medium) - Svag fokusindikator i toppnav och CTA
 
-**Observation:** Toppnavigeringen använder flera ikoner utan synlig textetikett, vilket gör funktionerna mindre självförklarande vid snabb skanning.  
-**Påverkan:** Användaren kan behöva testa sig fram för att förstå ikonernas betydelse, vilket ökar friktionen i viktiga flöden som konto och kundvagn.  
-**Förbättring:** Lägg till synliga etiketter eller tydligare tooltip/fokusnamn för ikonknappar, särskilt för konto, inloggning och kundvagn.
+**Observation:** Vid tabbnavigering syns fokus på vissa element, men fokusindikatorn är svag eller i praktiken osynlig på `Kontakta oss`-knappen i hero-sektionen mot den gröna bakgrunden.  
+**Påverkan:** Tangentbordsanvändare får svårare att se var fokus ligger och kan missa viktiga CTA-steg, vilket försämrar tillgänglighet och användbarhet.  
+**Förbättring:** Öka kontrast och tjocklek på fokusramen, och använd konsekvent fokusstil på toppnavigation, ikonknappar och CTA-knappar så aktivt element alltid är tydligt.
+**Bilaga:** Se `rapport/bilagor/bilaga-08-fokus-hero-default.png`, `rapport/bilagor/bilaga-09-fokus-topnav-hem.png`, `rapport/bilagor/bilaga-10-fokus-topnav-konto.png`, `rapport/bilagor/bilaga-11-fokus-cart-ikon.png`, `rapport/bilagor/bilaga-12-fokus-produktlank.png` och `rapport/bilagor/bilaga-13-fokus-cta-utorska.png`.
 
 ### OBS-004 (Medium) - Otydlig success feedback i kundvagnsflöde
 
