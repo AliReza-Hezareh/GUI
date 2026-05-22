@@ -47,12 +47,29 @@ Jag testar Brewscape som en ny användare som vill köpa kaffeutrustning online.
 
 ## 2. Iakttagelser från gränssnittstestning
 
-| ID | Severity | Observation | Påverkan på användaren | Expected | Actual |
-|---|---|---|---|---|---|
-| SEC-001 | High | `npm audit` visar 16 vulnerabilities, varav 9 high och 7 moderate. | Kända sårbarheter kan påverka säkerhet och stabilitet om de ligger i använd kod eller byggkedja. | Projektet ska inte ha high-risk dependencies. | Audit failar med high/moderate findings. |
-| OBS-001 | Medium | Klonad källkod innehåller trasiga svenska tecken som `SÃ¶k` och `LÃ¤gg`. | Om detta visas i UI blir text svårare att läsa och ser oprofessionell ut. | ÅÄÖ ska vara korrekta i kod och UI. | Live-testet passerade, men källkoden innehåller mojibake. |
-| OBS-002 | Low | Kassa visar många valideringsfel samtidigt vid tom submit. | En ny användare kan behöva läsa många fel på en gång. | Fel ska vara tydliga och kopplade till rätt fält. | Playwright verifierar att felen visas korrekt. |
-| OBS-003 | Low | Mobilnavigation är separat från desktopnavigation. | Test kan bli skört om man inte testar mobilmenyn på rätt sätt. | Mobilmenyn ska öppnas och navigation ska fungera. | Playwright verifierar mobilmeny och ingen horisontell overflow. |
+### OBS-001 (Medium) - Kontaktknapp med svag synlighet
+
+**Observation:** Knappen `Kontakta oss` i hero-sektionen har så låg kontrast i normal-läge att texten i praktiken ser osynlig ut tills användaren hovrar med musen.  
+**Påverkan:** Användaren kan missa att det är en klickbar CTA och tappar ett tydligt nästa steg, särskilt på mobil där hover inte finns.  
+**Förbättring:** Höj kontrasten i default-läget och använd samma visuella tydlighet som primärknappen, inklusive tydlig textfärg och synlig knappkant.
+
+### OBS-002 (Low) - Många felmeddelanden samtidigt i kassan
+
+**Observation:** Vid tom submit i kassan visas flera valideringsfel samtidigt utan tydlig prioritering av första fel att lösa.  
+**Påverkan:** En ny användare kan känna att formuläret är rörigt och osäkert på vilket fält som ska rättas först.  
+**Förbättring:** Sätt fokus på första felaktiga fältet och visa en tydlig sammanfattning högst upp som guidar användaren steg för steg.
+
+### OBS-003 (Medium) - Otydlig ikonbaserad toppnavigation
+
+**Observation:** Toppnavigeringen använder flera ikoner utan synlig textetikett, vilket gör funktionerna mindre självförklarande vid snabb skanning.  
+**Påverkan:** Användaren kan behöva testa sig fram för att förstå ikonernas betydelse, vilket ökar friktionen i viktiga flöden som konto och kundvagn.  
+**Förbättring:** Lägg till synliga etiketter eller tydligare tooltip/fokusnamn för ikonknappar, särskilt för konto, inloggning och kundvagn.
+
+### OBS-004 (Low) - Risk för inkonsekvent textkvalitet i UI
+
+**Observation:** Källkoden innehåller mojibake-strängar som `SÃ¶k` och `LÃ¤gg`, vilket visar risk för att svenska tecken kan bli fel i gränssnittet.  
+**Påverkan:** Om detta visas i produktion upplevs sidan som oprofessionell och svårare att läsa.  
+**Förbättring:** Säkerställ UTF-8 i hela textkedjan (källfiler, build och rendering) och lägg till en automatisk kontroll som stoppar trasiga tecken i CI.
 
 ## 3. Praktisk testning med verktyg
 
