@@ -33,6 +33,18 @@ Jag testar Brewscape som en ny användare som vill köpa kaffeutrustning online.
 - Specialtecken i sökfält kraschar inte appen.
 - Synliga kontroller har tillgängliga namn.
 
+### Prioritering och risknivå
+
+| Område | Metod | Risknivå | Motivering |
+|---|---|---|---|
+| Köpflöde (produkt -> kundvagn -> kassa) | Playwright + manuell kontroll | Hög | Direkt påverkan på om användaren kan slutföra ett köp. |
+| Navigation och länkar | Playwright | Hög | Brutna flöden stoppar användarens väg till rätt sida. |
+| Validering i formulär | Playwright + manuell kontroll | Hög | Fel validering kan ge fel data och blockerade beställningar. |
+| Mobil layout och meny | Playwright + manuell kontroll | Medel | Vanligt användarscenario, risk för dålig användbarhet på små skärmar. |
+| Textkvalitet och tydlighet (ÅÄÖ, labels, begriplighet) | Manuell kontroll | Medel | Påverkar förtroende och förståelse, svårare att bedöma helt automatiskt. |
+| Tangentbordsfokus och a11y-basnivå | Playwright + manuell kontroll | Medel | Viktigt för tillgänglighet och lagkravsnära beteende. |
+| Dependency-sårbarheter | Audit + manuell analys | Hög | Säkerhetsrisker kan påverka både drift och förtroende. |
+
 ## 2. Iakttagelser från gränssnittstestning
 
 | ID | Severity | Observation | Påverkan på användaren | Expected | Actual |
@@ -44,7 +56,9 @@ Jag testar Brewscape som en ny användare som vill köpa kaffeutrustning online.
 
 ## 3. Praktisk testning med verktyg
 
-Jag använder Playwright eftersom verktyget kan köra riktiga browserflöden, klicka på knappar, fylla i inputfält och kontrollera vad användaren faktiskt ser. Det passar bra för GUI-testning eftersom testet körs i Chromium och kan upprepas efter ändringar.
+Jag använder Playwright eftersom verktyget kör riktiga browserflöden och verifierar det användaren faktiskt ser i GUI.
+För de valda flödena passar det bra eftersom samma test kan köras upprepat efter varje ändring och snabbt fånga regressioner.
+Det är också lämpligt här eftersom vi kör både desktop och mobil i samma testsvit och får jämförbara resultat mellan vyerna.
 
 ### Valda flöden
 
